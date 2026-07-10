@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT Live（GPT-Live）徹底解説 — 1枚資料 | AIエージェント・Kawaru theme</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ===== セマンティックトークン（テーマはこの :root 値だけ差し替え）===== */
+  :root{
+    --brand:#1C3461; --brand-deep:#16284A; --brand-soft:rgba(28,52,97,.08); --brand-line:rgba(28,52,97,.22);
+    --accent:#5BBCD4; --accent-deep:#2C7A93; --accent-soft:rgba(91,188,212,.16);
+    --bg:#F7FAFC; --paper:#FFFFFF; --ink:#1C3461; --ink-mid:#4A6080; --ink-sub:#8098B4; --line:rgba(28,52,97,.12);
+    --head:'Noto Sans JP';
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Noto Sans JP',-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;line-height:1.7;}
+  .doc{max-width:880px;margin:0 auto;background:var(--paper);box-shadow:0 0 60px rgba(0,0,0,.10);overflow:hidden;}
+  .draft-tag{background:var(--brand-deep);color:#fff;font-size:12px;font-weight:700;text-align:center;padding:7px;letter-spacing:.4px;}
+  /* hero */
+  .hero{position:relative;background:linear-gradient(160deg,var(--brand-soft) 0%,var(--bg) 70%);padding:50px 52px 44px;border-bottom:3px solid var(--brand-line);overflow:hidden;}
+  .hero .coin{position:absolute;width:160px;height:160px;border-radius:50%;background:var(--accent);opacity:.15;top:-52px;right:-36px;}
+  .hero .chan{display:inline-flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .hero .chan img{width:50px;height:50px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.16);}
+  .hero .chan b{font-family:var(--head);font-weight:900;color:var(--brand-deep);font-size:17px;}
+  .hero .chan b small{display:block;font-size:11px;color:var(--ink-mid);font-weight:500;letter-spacing:.4px;}
+  .eyebrow{font-family:var(--head);font-weight:900;color:var(--brand-deep);letter-spacing:2px;font-size:13px;display:inline-flex;align-items:center;gap:9px;margin-bottom:12px;}
+  .eyebrow::before{content:'▸';background:var(--accent);color:var(--ink);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+  h1{font-family:var(--head);font-weight:900;font-size:40px;line-height:1.25;color:var(--ink);}
+  h1 .hl{color:var(--brand-deep);}
+  .hero p.sub{font-size:18px;color:var(--ink-mid);font-weight:700;margin-top:14px;max-width:660px;}
+  .meta{margin-top:20px;display:flex;gap:9px;flex-wrap:wrap;}
+  .meta span{background:var(--paper);border:1.5px solid var(--line);border-radius:999px;padding:6px 15px;font-size:13px;font-weight:700;color:var(--ink-mid);}
+  .meta span.k{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);}
+  /* toc */
+  .tocbar{background:var(--brand-soft);border-bottom:1px solid var(--line);padding:16px 52px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tocbar a{font-size:13px;font-weight:700;color:var(--brand-deep);text-decoration:none;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 13px;}
+  .tocbar a:hover{border-color:var(--brand);}
+  /* section */
+  section{padding:40px 52px;border-bottom:1px solid var(--line);}
+  .sec-h{display:flex;align-items:center;gap:13px;margin-bottom:22px;}
+  .sec-h .no{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--ink);font-family:var(--head);font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 var(--accent-deep);}
+  .sec-h h2{font-family:var(--head);font-weight:900;font-size:25px;color:var(--ink);}
+  p.body{font-size:16px;color:var(--ink);margin-bottom:12px;}
+  p.note{font-size:13px;color:var(--ink-mid);} .hl{color:var(--brand-deep);font-weight:700;} .hl-a{color:var(--accent-deep);font-weight:700;}
+  .lead{font-size:17px;color:var(--ink-mid);font-weight:700;}
+  /* TL;DR */
+  .tldr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+  .tldr .t{background:var(--bg);border:1.5px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:16px 15px;}
+  .tldr .t .k{font-family:var(--head);font-weight:900;color:var(--ink);font-size:13px;margin-bottom:6px;}
+  .tldr .t p{font-size:14px;font-weight:700;color:var(--ink);line-height:1.5;}
+  /* lists */
+  .bullets{list-style:none;} .bullets li{font-size:16px;font-weight:700;color:var(--ink);padding:10px 0 10px 30px;position:relative;border-bottom:1px solid var(--line);}
+  .bullets li::before{content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);width:11px;height:11px;border-radius:50%;background:var(--accent);}
+  .checks{list-style:none;} .checks li{font-size:15px;color:var(--ink);padding:7px 0 7px 26px;position:relative;}
+  .checks li::before{content:'✔';position:absolute;left:2px;color:var(--brand);font-weight:900;}
+  /* 2-col */
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center;}
+  .imgbox{border:2px dashed var(--brand-line);border-radius:12px;background:var(--brand-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--brand-deep);font-weight:700;text-align:center;padding:18px;min-height:170px;}
+  .imgbox .ic{font-size:28px;margin-bottom:6px;} .imgbox small{display:block;color:var(--ink-mid);font-weight:500;font-size:11.5px;margin-top:4px;}
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:0;}
+  .flow .step{flex:1;background:var(--bg);border:1.5px solid var(--line);border-top:4px solid var(--brand);border-radius:10px;padding:13px 9px;text-align:center;}
+  .flow .step .t{font-family:var(--head);font-weight:900;font-size:14px;color:var(--ink);margin-bottom:4px;}
+  .flow .step .d{font-size:11px;color:var(--ink-mid);line-height:1.4;}
+  .flow .arrow{display:flex;align-items:center;color:var(--accent);font-size:20px;font-weight:900;padding:0 4px;}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  .stat{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:18px;text-align:center;}
+  .stat .n{font-family:var(--head);font-size:36px;font-weight:900;color:var(--brand-deep);line-height:1;} .stat .n small{font-size:16px;}
+  .stat .u{font-size:12px;color:var(--ink-mid);margin-top:4px;} .stat .l{font-size:13px;font-weight:700;color:var(--ink);margin-top:6px;}
+  /* cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  .cards .c{background:var(--bg);border:1.5px solid var(--line);border-radius:13px;padding:18px 15px;text-align:center;}
+  .cards .c.accent{border-color:var(--brand);border-width:2px;background:var(--paper);}
+  .cards .c .pin{width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--ink);font-family:var(--head);font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 2px 0 var(--accent-deep);}
+  .cards .c h3{font-family:var(--head);font-weight:900;font-size:16px;color:var(--ink);margin-bottom:6px;} .cards .c p{font-size:13px;color:var(--ink-mid);line-height:1.55;}
+  .cards .c .mark{font-size:11px;font-weight:700;color:var(--brand-deep);margin-top:7px;}
+  /* before/after */
+  .ba{display:flex;align-items:stretch;gap:14px;}
+  .ba .panel{flex:1;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:18px;}
+  .ba .panel.after{border-color:var(--brand);border-width:2px;background:var(--paper);}
+  .ba .panel .tag{font-family:var(--head);font-weight:900;font-size:12px;border-radius:999px;padding:3px 11px;display:inline-block;margin-bottom:9px;}
+  .ba .panel.before .tag{background:var(--line);color:var(--ink-mid);} .ba .panel.after .tag{background:var(--brand);color:#fff;}
+  .ba .panel ul{list-style:none;} .ba .panel li{font-size:14px;color:var(--ink);padding:5px 0 5px 20px;position:relative;}
+  .ba .panel.before li::before{content:'×';position:absolute;left:0;color:var(--ink-sub);font-weight:900;}
+  .ba .panel.after li::before{content:'○';position:absolute;left:0;color:var(--brand);font-weight:900;}
+  .ba .mid{display:flex;align-items:center;color:var(--accent);font-size:26px;font-weight:900;}
+  /* table */
+  table.cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+  table.cmp th,table.cmp td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);}
+  table.cmp thead th{background:var(--ink);color:#fff;font-family:var(--head);font-weight:700;}
+  table.cmp thead th:first-child{background:var(--brand-deep);}
+  table.cmp tbody tr:last-child td{border-bottom:none;} table.cmp td:first-child{font-weight:700;}
+  table.cmp .yes{color:var(--brand-deep);font-weight:900;} table.cmp .no{color:var(--ink-mid);}
+  /* price */
+  .price{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  .price .p{background:var(--bg);border:1.5px solid var(--line);border-radius:13px;padding:18px 15px;text-align:center;}
+  .price .p.best{border:2px solid var(--accent);position:relative;background:var(--paper);}
+  .price .p.best::before{content:'人気';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--ink);font-family:var(--head);font-weight:900;font-size:11px;border-radius:999px;padding:2px 12px;}
+  .price .p .name{font-family:var(--head);font-weight:900;font-size:15px;color:var(--ink);}
+  .price .p .amt{font-family:var(--head);font-size:28px;font-weight:900;color:var(--brand-deep);margin:6px 0;} .price .p .amt small{font-size:12px;color:var(--ink-mid);}
+  .price .p ul{list-style:none;text-align:left;margin-top:8px;} .price .p li{font-size:12px;color:var(--ink-mid);padding:4px 0 4px 18px;position:relative;}
+  .price .p li::before{content:'✔';position:absolute;left:0;color:var(--brand);}
+  /* feature grid */
+  .feat{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+  .feat .f{background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:13px;text-align:center;}
+  .feat .f .ic{width:34px;height:34px;border-radius:9px;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--head);font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 7px;}
+  .feat .f b{font-size:13px;color:var(--ink);display:block;} .feat .f span{font-size:11px;color:var(--ink-mid);}
+  /* map */
+  .map{list-style:none;} .map li{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;color:var(--ink);padding:11px 14px;margin-bottom:9px;background:var(--bg);border:1.5px solid var(--line);border-left:4px solid var(--brand);border-radius:11px;}
+  .map li .q{flex:1;} .map li .ar{color:var(--accent);font-weight:900;} .map li .a{flex:1.3;color:var(--brand-deep);font-weight:700;}
+  /* steps */
+  .steps{list-style:none;} .steps li{font-size:15px;font-weight:600;color:var(--ink);padding:11px 14px 11px 50px;position:relative;margin-bottom:9px;background:var(--bg);border:1.5px solid var(--line);border-left:4px solid var(--brand);border-radius:11px;}
+  .steps li .n{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:27px;height:27px;background:var(--accent);color:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:900;font-size:13px;box-shadow:0 2px 0 var(--accent-deep);}
+  /* prompt */
+  .prompt{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--ink);color:#ECECEA;border-radius:10px;padding:14px 16px;line-height:1.65;margin-top:10px;}
+  .prompt .c{color:var(--accent);} .prompt .cm{color:var(--ink-sub);}
+  /* cycle */
+  .cycle{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
+  .cycle .node{width:120px;height:120px;border-radius:50%;background:var(--brand-soft);border:2px solid var(--brand);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;}
+  .cycle .node b{font-family:var(--head);font-size:14px;color:var(--brand-deep);} .cycle .node span{font-size:10.5px;color:var(--ink-mid);}
+  .cycle .ar{color:var(--accent);font-size:22px;font-weight:900;}
+  /* faq */
+  .faq .qa{background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:13px 16px;margin-bottom:9px;}
+  .faq .qa .q{font-family:var(--head);font-weight:900;font-size:15px;color:var(--brand-deep);} .faq .qa .q::before{content:'Q. ';color:var(--accent-deep);}
+  .faq .qa .a{font-size:14px;color:var(--ink-mid);margin-top:4px;} .faq .qa .a::before{content:'A. ';color:var(--ink);font-weight:700;}
+  /* timeline */
+  .timeline .row{display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);}
+  .timeline .tbadge{flex-shrink:0;background:var(--brand);color:#fff;font-family:var(--head);font-weight:900;border-radius:7px;padding:5px 12px;font-size:13px;min-width:84px;text-align:center;}
+  .timeline .row b{font-family:var(--head);font-size:15px;color:var(--ink);} .timeline .row p{font-size:13px;color:var(--ink-mid);margin-top:2px;}
+  /* note box */
+  .box{background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:12px;padding:18px 20px;}
+  .box h3{font-family:var(--head);font-weight:900;color:var(--accent-deep);font-size:16px;margin-bottom:8px;}
+  .box ul{margin-left:18px;font-size:14px;color:var(--ink);} .box li{margin-bottom:5px;}
+  /* footer */
+  footer{background:var(--ink);color:#EBEBE7;padding:36px 52px;}
+  footer .frow{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;}
+  footer .lg{display:flex;align-items:center;gap:11px;} footer .lg img{width:44px;height:44px;border-radius:50%;}
+  footer .lg b{font-family:var(--head);font-weight:900;color:#fff;font-size:15px;} footer .lg b small{display:block;font-size:11px;color:#9C9C96;font-weight:500;}
+  footer .cta{background:var(--accent);color:var(--ink);border-radius:999px;padding:11px 24px;font-family:var(--head);font-weight:900;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
+  footer .src{font-size:12px;color:#9C9C96;margin-top:16px;line-height:1.8;} footer .src a{color:var(--accent);text-decoration:none;}
+  .secsub{font-family:var(--head);font-weight:900;font-size:15px;color:var(--ink);margin:18px 0 10px;}
+  .xcard{border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;background:var(--paper);min-height:170px;display:flex;flex-direction:column;justify-content:center;}
+  .xcard .xhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .xcard .xavatar{width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--head);font-size:16px;flex-shrink:0;}
+  .xcard .xname{font-family:var(--head);font-weight:900;color:var(--ink);font-size:14px;}
+  .xcard .xhandle{font-size:12px;color:var(--ink-mid);}
+  .xcard .xtext{font-size:14px;color:var(--ink);line-height:1.6;}
+  .xcard .xtext-ja{font-size:12.5px;color:var(--ink-mid);line-height:1.6;margin-top:8px;}
+  .xcard .xstats{display:flex;gap:18px;margin-top:12px;font-size:12.5px;color:var(--ink-mid);font-weight:700;}
+  .qrbox{width:150px;height:150px;flex-shrink:0;border-radius:12px;border:2px solid var(--brand);background:#fff url('data:image/png;base64,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') center/88% no-repeat;}
+  .qr-cap{font-size:12px;color:var(--ink-mid);font-weight:700;margin-top:6px;text-align:center;}
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="kawaru-logo" viewBox="0 0 406 93">
+    <rect x="6.67572e-06" y="13.4815" width="7.93029" height="74.5447" fill="currentColor"/>
+    <path d="M18.2397 52.7235L24.2772 47.5817L57.8911 88.0582L48.3318 88.0582L18.2397 52.7235Z" fill="#5BBCD4"/>
+    <path d="M34.8933 49.5514L40.9308 44.4096L77.2278 88.0366L67.4075 88.0262L34.8933 49.5514Z" fill="#5BBCD4"/>
+    <rect x="57.1908" y="2.92276" width="7.93029" height="83.5485" transform="rotate(42.3764 57.1908 2.92276)" fill="currentColor"/>
+    <rect x="59.4772" width="7.93029" height="22.2048" fill="currentColor"/>
+    <rect x="44.4096" y="7.9303" width="7.93029" height="22.9978" transform="rotate(-90 44.4096 7.9303)" fill="currentColor"/>
+    <path d="M110.882 61.3999L110.204 47.3281L135.413 20.7649H148.958L126.233 45.2211L119.46 52.4451L110.882 61.3999ZM99.9703 73.4399V20.7649H112.086V73.4399H99.9703ZM136.015 73.4399L117.278 50.4886L125.254 41.8349L150.237 73.4399H136.015ZM181.053 73.4399V65.5386L180.301 63.8079V49.6609C180.301 47.1525 179.523 45.196 177.968 43.7914C176.463 42.3867 174.13 41.6844 170.97 41.6844C168.813 41.6844 166.681 42.0355 164.574 42.7379C162.517 43.39 160.761 44.293 159.306 45.4469L155.092 37.2446C157.299 35.6895 159.958 34.4855 163.069 33.6326C166.179 32.7798 169.339 32.3534 172.55 32.3534C178.721 32.3534 183.512 33.8082 186.923 36.7179C190.334 39.6275 192.04 44.1676 192.04 50.3381V73.4399H181.053ZM168.712 74.0419C165.552 74.0419 162.843 73.5151 160.585 72.4616C158.328 71.358 156.597 69.878 155.393 68.0219C154.189 66.1657 153.587 64.0838 153.587 61.7761C153.587 59.3681 154.164 57.2611 155.318 55.4551C156.522 53.6491 158.403 52.2445 160.962 51.2411C163.52 50.1876 166.856 49.6609 170.97 49.6609H181.731V56.5086H172.249C169.49 56.5086 167.584 56.9601 166.53 57.8631C165.527 58.7661 165.025 59.8949 165.025 61.2494C165.025 62.7544 165.602 63.9584 166.756 64.8614C167.96 65.7142 169.59 66.1406 171.647 66.1406C173.604 66.1406 175.359 65.6891 176.915 64.7861C178.47 63.833 179.599 62.4534 180.301 60.6474L182.107 66.0654C181.254 68.674 179.699 70.6556 177.441 72.0101C175.184 73.3646 172.274 74.0419 168.712 74.0419ZM213.443 73.4399L198.844 32.9554H209.906L222.021 67.7961H216.754L229.396 32.9554H239.329L251.594 67.7961H246.327L258.818 32.9554H269.203L254.529 73.4399H243.166L232.406 43.5656H235.867L224.73 73.4399H213.443ZM300.427 73.4399V65.5386L299.675 63.8079V49.6609C299.675 47.1525 298.897 45.196 297.342 43.7914C295.837 42.3867 293.504 41.6844 290.344 41.6844C288.187 41.6844 286.055 42.0355 283.948 42.7379C281.891 43.39 280.135 44.293 278.68 45.4469L274.466 37.2446C276.674 35.6895 279.332 34.4855 282.443 33.6326C285.553 32.7798 288.714 32.3534 291.924 32.3534C298.095 32.3534 302.886 33.8082 306.297 36.7179C309.708 39.6275 311.414 44.1676 311.414 50.3381V73.4399H300.427ZM288.086 74.0419C284.926 74.0419 282.217 73.5151 279.959 72.4616C277.702 71.358 275.971 69.878 274.767 68.0219C273.563 66.1657 272.961 64.0838 272.961 61.7761C272.961 59.3681 273.538 57.2611 274.692 55.4551C275.896 53.6491 277.777 52.2445 280.336 51.2411C282.894 50.1876 286.23 49.6609 290.344 49.6609H301.105V56.5086H291.623C288.864 56.5086 286.958 56.9601 285.904 57.8631C284.901 58.7661 284.399 59.8949 284.399 61.2494C284.399 62.7544 284.976 63.9584 286.13 64.8614C287.334 65.7142 288.964 66.1406 291.021 66.1406C292.978 66.1406 294.734 65.6891 296.289 64.7861C297.844 63.833 298.973 62.4534 299.675 60.6474L301.481 66.0654C300.628 68.674 299.073 70.6556 296.815 72.0101C294.558 73.3646 291.648 74.0419 288.086 74.0419ZM324.296 73.4399V32.9554H335.508V44.3934L333.928 41.0824C335.132 38.2229 337.063 36.0657 339.722 34.6109C342.381 33.1059 345.617 32.3534 349.429 32.3534V43.1894C348.928 43.1392 348.476 43.1141 348.075 43.1141C347.674 43.064 347.247 43.0389 346.796 43.0389C343.585 43.0389 340.976 43.967 338.97 45.8231C337.013 47.6291 336.035 50.4635 336.035 54.3264V73.4399H324.296ZM376.043 74.0419C372.681 74.0419 369.671 73.3897 367.013 72.0854C364.404 70.781 362.372 68.7995 360.917 66.1406C359.462 63.4316 358.735 59.9952 358.735 55.8314V32.9554H370.474V54.1006C370.474 57.4618 371.176 59.945 372.581 61.5504C374.036 63.1055 376.068 63.8831 378.676 63.8831C380.482 63.8831 382.088 63.5069 383.492 62.7544C384.897 61.9517 386.001 60.7477 386.803 59.1424C387.606 57.4869 388.007 55.43 388.007 52.9719V32.9554H399.746V73.4399H388.609V62.3029L390.641 65.5386C389.287 68.348 387.28 70.48 384.621 71.9349C382.012 73.3395 379.153 74.0419 376.043 74.0419Z" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<div class="doc">
+
+  <div class="hero">
+    <span class="coin"></span>
+    <div class="chan"><svg width="132" height="30" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+    <div class="eyebrow">ONE-PAGE GUIDE</div>
+    <h1><span class="hl">ChatGPT Live</span>（GPT-Live）徹底解説</h1>
+    <p class="sub">「声の仕事」がAIに置き換わる — 営業・電話代行はその入り口</p>
+    <div class="meta"><span class="k">2026年7月8日発表</span><span>フルデュプレックス音声AI</span><span>営業・電話代行</span><span>出典明記</span></div>
+  </div>
+
+  <div class="tocbar">
+    <a href="#s1">① GPT-Liveとは</a><a href="#s2">② 何が新しいか</a><a href="#s3">③ 数字で見る</a><a href="#s4">④ 声の仕事の変化</a>
+    <a href="#s5">⑤ キーボードレスの未来</a><a href="#s6">⑥ 使い方</a><a href="#s7">⑦ 開発者向け</a><a href="#s8">⑧ 注意点</a>
+  </div>
+
+  <!-- TL;DR -->
+  <section>
+    <div class="sec-h"><div class="no">!</div><h2>まず3行で</h2></div>
+    <div class="tldr">
+      <div class="t"><div class="k">POINT 1</div><p>OpenAIが2026年7月8日、聞きながら同時に話せる「フルデュプレックス（全二重）」音声モデル GPT-Live を発表。相づち・割り込み・沈黙まで人間の会話に近づいた</p></div>
+      <div class="t"><div class="k">POINT 2</div><p>賢さも別物。難しい質問は裏側でGPT-5.5に委譲され、科学推論ベンチGPQAは従来音声モードの45.3%から84.2%へ</p></div>
+      <div class="t"><div class="k">POINT 3</div><p>「声でやりとりする仕事」——営業電話、電話代行、受付、相談、通訳——がAIで実用レベルに。その先には話すだけでエージェントが動く働き方がある</p></div>
+    </div>
+    <div class="secsub">こんな疑問、ありませんか？</div>
+    <ul class="bullets"><li>GPT-Liveって結局、従来の音声モードと何が違うの？</li><li>営業電話や電話代行はもうAIに任せられる？</li><li>開発者は今、実際に何が使えるの？</li></ul>
+  </section>
+
+  <!-- 1 GPT-Liveとは -->
+  <section id="s1">
+    <div class="sec-h"><div class="no">1</div><h2>GPT-Liveとは何か</h2></div>
+    <div class="row2">
+      <div><p class="body">GPT-Liveは、2026年7月8日にOpenAIが発表した新世代の音声モデル群です。<span class="hl">「聞くことと話すことを同時に行うフルデュプレックス（全二重）構造」</span>を採用し、相づち・割り込み・沈黙の間まで人間の会話に近い受け答えができます。ユーザー向けにはChatGPTの音声モード（Voice）として提供され、有料標準の「GPT-Live-1」と無料標準の「GPT-Live-1 mini」があります。詳細は<a href="https://openai.com/ja-JP/index/introducing-gpt-live/" style="color:var(--brand-deep);font-weight:700;">公式ブログ</a>と<a href="https://x.com/OpenAI/status/2074907025537224840" style="color:var(--brand-deep);font-weight:700;">公式Xの発表スレッド</a>にまとまっています。</p></div>
+      <div class="xcard">
+        <div class="xhead"><div class="xavatar">O</div><div><div class="xname">OpenAI</div><div class="xhandle">@OpenAI</div></div></div>
+        <p class="xtext">Introducing GPT-Live, a new generation of voice models for natural human-AI interaction. Rolling out in ChatGPT starting today. You'll want to turn the sound on for this one.</p>
+        <p class="xtext-ja">（GPT-Liveを発表します。自然な対話のための新世代音声モデル群。本日からChatGPTに展開開始）</p>
+        <div class="xstats"><span>♡ 24,139</span><span>👁 表示734万回</span></div>
+      </div>
+    </div>
+    <div class="secsub">発表から分かったこと</div>
+    <ul class="bullets">
+      <li>提供はChatGPTの iOS / Android / Web。「Voiceボタンをタップするだけ」</li>
+      <li>ロールアウトは発表当日から数日かけて全ユーザーへ。7月9日時点でGo / Plus / Proプランは展開完了、無料ユーザーは進行中</li>
+      <li>GPT-Live自体のAPIは「Coming soon（近日提供）」。開発者は今は既存のRealtime APIを使う（第7章）</li>
+    </ul>
+  </section>
+
+  <!-- 2 何が新しいか -->
+  <section id="s2">
+    <div class="sec-h"><div class="no">2</div><h2>何がそんなに新しいのか — 3つの柱</h2></div>
+    <div class="cards">
+      <div class="c"><div class="pin">1</div><h3>フルデュプレックス</h3><p>聞くことと話すことを同時に行う構造。1秒間に何度も「話す・聞く・待つ・割り込む・ツールを呼ぶ」を判断していると報じられています。</p></div>
+      <div class="c accent"><div class="pin">2</div><h3>人格・会話の質</h3><p>人間評価で75.7%がGPT-Live-1をAdvanced Voice Modeより選好（miniでも69.2%）。話していて楽しいことを性能として設計。</p></div>
+      <div class="c"><div class="pin">3</div><h3>推論委譲</h3><p>検索や深い推論が必要な質問は、裏側でGPT-5.5などのフロンティアモデルに委譲し、結果を会話に持ち帰る。</p></div>
+    </div>
+    <div class="secsub">Advanced Voice Mode（従来）→ GPT-Live</div>
+    <div class="ba">
+      <div class="panel before"><span class="tag">Before：AVM</span><ul><li>ターン制。相手が話し終わるのを待つ</li><li>割り込むと不自然な間ができる</li><li>検索・深い推論をしながらの会話は苦手</li></ul></div>
+      <div class="mid">→</div>
+      <div class="panel after"><span class="tag">After：GPT-Live</span><ul><li>フルデュプレックス。聞きながら話す</li><li>割り込み・沈黙も自然に処理する</li><li>裏でGPT-5.5に検索・推論を委譲できる</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 3 数字で見る -->
+  <section id="s3">
+    <div class="sec-h"><div class="no">3</div><h2>数字で見るGPT-Live — 「音声なのに賢い」の意味</h2></div>
+    <div class="stats">
+      <div class="stat"><div class="n">84.2<small>%</small></div><div class="u">GPQA（科学推論、AVM比 45.3%→）</div><div class="l">頭の良さが約1.9倍</div></div>
+      <div class="stat"><div class="n">75.2<small>%</small></div><div class="u">BrowseComp（Web検索、AVM比 0.7%→）</div><div class="l">調べながら話せる</div></div>
+      <div class="stat"><div class="n">75.7<small>%</small></div><div class="u">会話選好（人間評価）</div><div class="l">AVMより好まれた割合</div></div>
+    </div>
+    <p class="note" style="margin-top:10px;">※ いずれも公式ブログの数値として各メディア（ITmedia・Impress Watch等）が報じているベンチマークです。τ³-Voice Telecom（顧客サポート模擬）でも全GPT-LiveモデルがAVMを上回ったと報告されています。</p>
+    <div class="secsub">プラン別の料金（報道ベース・AI総合研究所）</div>
+    <div class="price">
+      <div class="p"><div class="name">Free</div><div class="amt">$0</div><ul><li>GPT-Live-1 mini</li></ul></div>
+      <div class="p"><div class="name">Go</div><div class="amt">$8<small>/月</small></div><ul><li>GPT-Live-1</li></ul></div>
+      <div class="p best"><div class="name">Plus</div><div class="amt">$20<small>/月</small></div><ul><li>GPT-Live-1</li><li>本格利用向け</li></ul></div>
+      <div class="p"><div class="name">Pro</div><div class="amt">$200<small>/月</small></div><ul><li>GPT-Live-1（利用上限大）</li></ul></div>
+      <div class="p"><div class="name">Business / Enterprise / Edu</div><div class="amt">ー</div><ul><li>初期非対応（AVM継続）</li></ul></div>
+    </div>
+    <p class="note" style="margin-top:10px;">出典：<a href="https://www.ai-souken.com/article/what-is-gpt-live" style="color:var(--ink-mid);">AI総合研究所</a>の報道による整理。無料でもminiが使えるため、新世代の音声会話の入場料は実質ゼロになりました。</p>
+  </section>
+
+  <!-- 4 声の仕事の変化 -->
+  <section id="s4">
+    <div class="sec-h"><div class="no">4</div><h2>「声の仕事」が置き換わる — 営業・電話代行はその一例</h2></div>
+    <p class="lead">営業電話・電話代行・受付・サポート窓口の仕事を分解すると、中身は4つです。</p>
+    <div class="flow">
+      <div class="step"><div class="t">① 聞く</div><div class="d">遮らず相づちを打ちながら要点を掴む</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">② 即応する</div><div class="d">不自然な間を作らずテンポよく返す</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">③ 調べる</div><div class="d">分からないことを確認して正確に答える</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">④ 記録する</div><div class="d">会話を整理し次のアクションにつなぐ</div></div>
+    </div>
+    <p class="note" style="margin-top:10px;">①②はフルデュプレックスが、③は推論委譲とWeb検索が、④はテキスト化と要約がそれぞれ直撃しています。</p>
+    <div class="secsub">「声の仕事」の事例</div>
+    <div class="feat">
+      <div class="f"><div class="ic">営</div><b>営業電話</b><span>ロールプレイ・壁打ちの実験が報告</span></div>
+      <div class="f"><div class="ic">電</div><b>電話代行</b><span>τ³-Voice TelecomでAVM超え</span></div>
+      <div class="f"><div class="ic">相</div><b>相談</b><span>悩みを声で整理する使い方</span></div>
+      <div class="f"><div class="ic">通</div><b>通訳</b><span>ライブ翻訳・アンビエント通訳</span></div>
+    </div>
+    <p class="note" style="margin-top:10px;">X上では、GPT-Live以前の音声モードを使ったコールド架電で「2〜3%の商談化率だった」という報告が見られました（個人の報告であり公式統計ではありません）。ターン制のぎこちない音声ですらその数字が出ていたなら、相づちと割り込みを備えた自然な会話でどうなるか——期待が集まるのは自然な流れです。</p>
+    <p class="body" style="margin-top:10px;">ただしChatGPTアプリのGPT-Liveを直接「自社の電話番」にはまだできません。APIは近日提供の段階で、電話システムに組み込むには既存のRealtime APIが必要です。また日本では特定商取引法や個人情報の扱いなど、営業電話に固有の法規制があり、「AIだから何をしてもいい」わけではありません。置き換えの波が来ていることと、運用に設計が要ることは、両方本当です。</p>
+  </section>
+
+  <!-- 5 キーボードレスの未来 -->
+  <section id="s5">
+    <div class="sec-h"><div class="no">5</div><h2>キーボードレスの未来 — 会話がエージェントの操縦桿になる</h2></div>
+    <p class="body">これまでAIへの指示はキーボードが担ってきました。プロンプトを書き、結果を読み、また書く。GPT-Liveが示したのは、この操縦桿が声に替わる未来です。単なる音声入力（書く代わりに喋る）ではなく、フルデュプレックスの会話では指示→確認→修正→実行のループが会話のテンポで回ります。推論委譲の仕組みは「会話しながら裏でエージェントが動く」構造そのものです。</p>
+    <div class="cycle">
+      <div class="node"><b>① 話す</b><span>口頭で指示・相談</span></div><span class="ar">→</span>
+      <div class="node"><b>② 委譲</b><span>裏で検索・推論が走る</span></div><span class="ar">→</span>
+      <div class="node"><b>③ 割り込む</b><span>会話のテンポで修正</span></div><span class="ar">→</span>
+      <div class="node"><b>④ 受け取る</b><span>成果物が会話に返る</span></div><span class="ar">↻</span>
+    </div>
+    <p class="note" style="margin-top:10px;">superwhisperやWispr Flowのような音声入力ツールでコーディングエージェントに口頭指示を出すスタイルもすでに広がっており、「AIに何かを頼む＝キーボードに向かう」という等式は崩れつつあります。</p>
+  </section>
+
+  <!-- 6 使い方 -->
+  <section id="s6">
+    <div class="sec-h"><div class="no">6</div><h2>使い方（初心者向け） — 今日から試す手順</h2></div>
+    <ul class="steps">
+      <li><span class="n">1</span>ChatGPTアプリを最新版に更新する（iOS / Android。Webはそのままでも可）</li>
+      <li><span class="n">2</span>入力欄の右にある音声（Voice）ボタンをタップする</li>
+      <li><span class="n">3</span>話しかける。途中で割り込んでいいし、「ちょっと待って」と言えば待ってくれる</li>
+      <li><span class="n">4</span>終わるときは「会話を終了して」と言うか、終了ボタンをタップ</li>
+    </ul>
+    <div class="secsub">こんなとき → こう話しかける</div>
+    <ul class="map">
+      <li><span class="q">何ができるか知りたい</span><span class="ar">→</span><span class="a">「GPT-Liveになって何が変わったの？デモっぽく見せて」</span></li>
+      <li><span class="q">営業の練習がしたい</span><span class="ar">→</span><span class="a">「あなたは値下げ要求の厳しいお客さん役。途中で遠慮なく割り込んで」</span></li>
+      <li><span class="q">通訳してほしい</span><span class="ar">→</span><span class="a">「今から英語と日本語の同時通訳者になって」</span></li>
+      <li><span class="q">相談に乗ってほしい</span><span class="ar">→</span><span class="a">「今日あったことを整理したいから聞き役になって」</span></li>
+      <li><span class="q">ニュースが聞きたい</span><span class="ar">→</span><span class="a">「今朝のAI関連ニュースを番組みたいに読み上げて」</span></li>
+    </ul>
+  </section>
+
+  <!-- 7 開発者向け -->
+  <section id="s7">
+    <div class="sec-h"><div class="no">7</div><h2>開発者向け — 今の現在地</h2></div>
+    <p class="body">GPT-Live自体のAPIは未提供（公式に「Coming soon to the API」）。いま開発者が使えるのは<span class="hl">Realtime API</span>（gpt-realtime系モデル）で、WebRTC/WebSocketで音声をストリーミングし、音声エージェント・電話統合・リアルタイム翻訳などが構築できます。GPT-Liveで示された方向性を、API側で先取りして組む形です。</p>
+    <p class="note">Realtime APIをブラウザから直接使うリアルタイム翻訳サイトのサンプルも用意しています（プレゼントキットで案内）。</p>
+  </section>
+
+  <!-- 8 注意点 -->
+  <section id="s8">
+    <div class="sec-h"><div class="no">8</div><h2>知っておきたい注意点</h2></div>
+    <ul class="checks">
+      <li>初期リリースではビデオ・画面共有との同時利用は不可と報じられています</li>
+      <li>日本語について、公式は「一部の言語では非ネイティブなアクセントや流暢さの差がありうる」と認めています</li>
+      <li>ロールアウト初期には、一部有料ユーザーに1日あたり約1時間程度の利用制限があるという報道があります（流動的な情報です）</li>
+      <li>音声会話のデータは既定でAI学習にオプトアウトされ、30日保持・手動削除が可能と報じられています</li>
+      <li>営業・勧誘の電話にAIを使う場合、特定商取引法など日本の法規制と、通話録音・本人明示の運用設計が必要です</li>
+      <li>会話の自然さには個人差のある評価があり、「割り込みが多い」と感じる報告も一部にあります</li>
+    </ul>
+  </section>
+
+  <div class="box" style="margin:0 52px 40px;display:flex;gap:26px;align-items:center;">
+    <div style="flex:1;">
+      <h3>🎁 プレゼントキットのご案内</h3>
+      <p style="font-size:14px;color:var(--ink);">ChatGPT Live活用術100選・おすすめ音声入力AI5選・リアルタイム翻訳サイトの3点セットは <a href="https://fuuuuuuma.github.io/gpt-live-guide-ja/present.html">プレゼントキットのページ</a> から受け取れます。</p>
+    </div>
+    <div><div class="qrbox"></div><div class="qr-cap">スマホで読み取る 📱</div></div>
+  </div>
+
+  <footer>
+    <div class="frow">
+      <div class="lg"><svg width="132" height="30" style="color:#fff"><use href="#kawaru-logo"/></svg></div>
+      <div style="display:flex;align-items:center;gap:22px;">
+        <div><div class="qrbox" style="width:110px;height:110px;"></div><div class="qr-cap" style="color:rgba(255,255,255,.85);">🎁 プレゼントはこちら</div></div>
+        <a class="cta" href="https://www.youtube.com/@aiagent-kawaru">チャンネル登録</a>
+      </div>
+    </div>
+    <p class="src">出典：公式ブログ <a href="https://openai.com/ja-JP/index/introducing-gpt-live/">openai.com/ja-JP/index/introducing-gpt-live</a> ／ 公式X <a href="https://x.com/OpenAI/status/2074907025537224840">x.com/OpenAI</a><br>
+      ※ 本資料は2026年7月10日時点の情報に基づく非公式まとめ。OpenAI公式とは無関係で、仕様・料金は変わる可能性があります。全文（GitHub公開）・スライドは概要欄から。</p>
+  </footer>
+</div>
+</body>
+</html>

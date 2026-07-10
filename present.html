@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎁 プレゼントキット — ChatGPT Live徹底解説</title>
+<style>
+  :root{--brand:#1C3461;--brand-deep:#16284A;--accent:#5BBCD4;--accent-deep:#2C7A93;
+    --bg:#F7FAFC;--paper:#FFFFFF;--ink:#1C3461;--ink-mid:#4A6080;--line:rgba(28,52,97,.12);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Sans",sans-serif;line-height:1.75;}
+  .bar{height:6px;background:linear-gradient(90deg,var(--brand),var(--accent));}
+  .wrap{max-width:860px;margin:0 auto;padding:30px 20px 70px;}
+  h1{font-size:27px;font-weight:900;color:var(--brand-deep);margin:16px 0 8px;}
+  .sub{color:var(--ink-mid);font-size:14.5px;margin-bottom:24px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin-bottom:20px;box-shadow:0 2px 10px rgba(28,52,97,.05);}
+  .card h2{font-size:19px;font-weight:900;color:var(--brand-deep);margin-bottom:10px;}
+  .card p{font-size:14.5px;color:var(--ink);margin-bottom:10px;}
+  pre.prompt{background:#16284A;color:#EAF2F8;border-radius:12px;padding:14px 16px;white-space:pre-wrap;word-break:break-word;font-size:13.5px;line-height:1.7;font-family:"Noto Sans JP",monospace;max-height:420px;overflow-y:auto;margin:10px 0 12px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);border:2px solid var(--brand);color:var(--ink);border-radius:999px;padding:10px 22px;font-weight:900;font-size:14px;cursor:pointer;text-decoration:none;font-family:inherit;}
+  .btn:hover{filter:brightness(1.05);}
+  .btn.ghost{background:var(--paper);border:1.5px solid var(--line);color:var(--brand);}
+  .btn.sm{padding:7px 16px;font-size:13px;}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+  .badge{display:inline-block;background:var(--accent);color:var(--ink);font-weight:900;border-radius:999px;padding:3px 14px;font-size:12.5px;margin-bottom:8px;}
+  .icard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px;background:var(--paper);}
+  .ititle{font-weight:900;color:var(--brand-deep);font-size:15.5px;}
+  .imeta{font-size:12.5px;color:var(--ink-mid);margin:2px 0 6px;}
+  .linkrow{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:12px;background:var(--paper);}
+  .linkrow .site{font-weight:900;color:var(--brand-deep);font-size:15px;}
+  .linkrow a{color:var(--accent-deep);font-weight:700;font-size:13.5px;word-break:break-all;}
+  .linkrow .usage{font-size:13px;color:var(--ink-mid);}
+  .note{font-size:13px;color:var(--ink-mid);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:10px;}
+  .note b{color:var(--brand-deep);}
+  .nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;}
+  .nav a{background:var(--paper);border:1.5px solid var(--line);color:var(--brand);font-weight:700;font-size:13px;border-radius:999px;padding:6px 14px;text-decoration:none;}
+  .nav a:hover{border-color:var(--accent);}
+  h3.cat{font-size:20px;font-weight:900;color:var(--brand-deep);border-left:6px solid var(--accent);padding-left:12px;margin:34px 0 14px;}
+  .link-out{border:1.5px solid var(--brand);border-radius:14px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:12px 0;}
+  .link-out .cnt{font-weight:900;color:var(--brand-deep);font-size:19px;}
+  footer{text-align:center;font-size:12.5px;color:var(--ink-mid);margin-top:30px;}
+  footer a{color:var(--accent-deep);font-weight:700;}
+  .qrbox{width:140px;height:140px;flex-shrink:0;border-radius:12px;border:2px solid var(--brand);background:#fff url('data:image/png;base64,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') center/88% no-repeat;}
+  .qr-cap{font-size:12px;color:var(--ink-mid);font-weight:700;margin-top:6px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<div class="wrap">
+  <div style="display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+    <div style="flex:1;min-width:260px;">
+      <h1>🎁 プレゼントキット</h1>
+      <p class="sub" style="margin-bottom:8px;">「ChatGPT Live（GPT-Live）徹底解説」のプレゼント3点セットです。すべてこのページからコピー、またはダウンロードで受け取れます。</p>
+    </div>
+    <div><div class="qrbox"></div><div class="qr-cap">スマホで開く 📱</div></div>
+  </div>
+
+  <div class="card">
+    <span class="badge">キット 1/3</span>
+    <h2>ChatGPT Live活用術100選</h2>
+    <p>営業・商談、電話・受付、相談、通訳、学習、移動中など10カテゴリ×10本。ChatGPTの音声モードに「そのまま話しかけるだけ」のフレーズ集です。1本ずつ個別にコピーできる専用ページを用意しました。</p>
+    <div class="link-out">
+      <span class="cnt">100本収録</span>
+      <a class="btn" href="./live100.html">活用術100選を開く →</a>
+    </div>
+    <div class="btns"><button class="btn ghost" onclick="downloadText('k1','chatgpt-live-100.md', this)">⬇ 100本まとめてダウンロード（.md）</button></div>
+  </div>
+
+  <div class="card">
+    <span class="badge">キット 2/3</span>
+    <h2>その他オススメ音声入力AI 5選</h2>
+    <p>GPT-Liveと組み合わせて「キーボードレス」を実現する音声入力ツール5本。リンクからそのまま各サイトへ飛べます。価格は変動しやすいため、各サイトで最新情報を確認してください。</p>
+    <div class="linkrow">
+  <span class="site">1. superwhisper</span>
+  <a href="https://superwhisper.com" target="_blank" rel="noopener">https://superwhisper.com</a>
+  <span class="usage">Mac向けの音声入力アプリ。ローカル処理に対応し、どのアプリでも使える<br>使いどころ: 手を止めずにメール・メモ・コードのコメントを声で書きたいときに</span>
+</div>
+<div class="linkrow">
+  <span class="site">2. Wispr Flow</span>
+  <a href="https://wisprflow.ai" target="_blank" rel="noopener">https://wisprflow.ai</a>
+  <span class="usage">話すだけで整った文章に整形してくれる音声入力ツール<br>使いどころ: メールやチャットの返信を話しながらそのまま清書したいときに</span>
+</div>
+<div class="linkrow">
+  <span class="site">3. Aqua Voice</span>
+  <a href="https://withaqua.com" target="_blank" rel="noopener">https://withaqua.com</a>
+  <span class="usage">音声でテキストを書く・編集するエディタ型ツール<br>使いどころ: レポートや議事録の下書きを声だけで進めたいときに</span>
+</div>
+<div class="linkrow">
+  <span class="site">4. MacWhisper</span>
+  <a href="https://macwhisper.com" target="_blank" rel="noopener">https://macwhisper.com</a>
+  <span class="usage">Whisperベースの文字起こしMacアプリ<br>使いどころ: 収録した音声・動画素材をあとからまとめて文字起こししたいときに</span>
+</div>
+<div class="linkrow">
+  <span class="site">5. Notta</span>
+  <a href="https://www.notta.ai" target="_blank" rel="noopener">https://www.notta.ai</a>
+  <span class="usage">日本語に強い会議の文字起こし・要約サービス<br>使いどころ: 商談や会議の議事録づくり、インタビューの文字起こしに</span>
+</div>
+    <div class="note"><b>選び方の目安:</b> コーディング指示など開発のお供 → superwhisper ｜ 会議・インタビューの記録 → Notta ｜ 文章の執筆・清書 → Wispr Flow / Aqua Voice</div>
+    <div class="btns" style="margin-top:12px;"><button class="btn ghost" onclick="downloadText('k2','voice-ai-5.md', this)">⬇ 5選の解説をダウンロード（.md）</button></div>
+  </div>
+
+  <div class="card">
+    <span class="badge">キット 3/3</span>
+    <h2>リアルタイム翻訳サイト（デプロイ済み）</h2>
+    <p>OpenAIのAPIキーを入れるだけで、マイクの音声を選んだ言語へ同時通訳して読み上げる公開Webサイトです。中間サーバーなし・ブラウザからOpenAIへ直接接続する作りで、いますぐ使えます。</p>
+    <div class="link-out">
+      <span class="cnt">🌐 デプロイ済み</span>
+      <a class="btn" href="./translate.html" target="_blank" rel="noopener">翻訳サイトを開く →</a>
+    </div>
+    <p style="margin-top:8px;">使い方ガイド（APIキーの取り方から手順まで）:</p>
+    <pre class="prompt" id="k3"># 🎁 リアルタイム翻訳サイトの使い方
+
+配布サイト: https://fuuuuuuma.github.io/gpt-live-guide-ja/translate.html
+
+## 何ができるか
+
+マイクに向かって話すと、選んだ言語にその場で通訳し、音声でも読み上げてくれるWebサイトです。OpenAIのAPIキー（自分の利用枠を使うための鍵）を入れるだけで使えます。
+
+このサイトは、OpenAIが提供している「Realtime API」という仕組みをブラウザから直接呼び出しています。間に中間サーバーを挟まない作りなので、話した内容や入力したAPIキーがこのサイトの運営者側に送られることはありません（通信はお使いのブラウザとOpenAIの間で直接行われます）。
+
+ただし、OpenAIの公式な推奨では、通常のAPIキーは本来サーバー側で使うものとされています。ブラウザにキーを貼り付けるこのサイトの使い方は、自分の端末で使う個人利用向けの簡易な形です。下の「注意事項」を読んでから使ってください。
+
+## 準備: OpenAIのAPIキーの取り方
+
+1. https://platform.openai.com にアクセスし、OpenAIのアカウントでログインします
+2. 左側のメニューから「API keys」を開きます
+3. 「Create new secret key」をクリックして新しいキーを発行します
+4. 表示されたキー（sk-から始まる文字列）をコピーして控えておきます
+5. Realtime APIの利用には従量課金の登録が必要です。あらかじめOpenAIアカウントの支払い設定（Billing）で登録を済ませておいてください
+
+## 使い方ステップ
+
+1. 配布サイト（https://fuuuuuuma.github.io/gpt-live-guide-ja/translate.html）を開く
+2. 控えておいたAPIキーを、キー入力欄に貼り付ける
+3. 翻訳したい方向（どの言語からどの言語へ通訳するか）を選ぶ
+4. 開始ボタンを押す
+5. マイクに向かって話す。話した内容が選んだ言語に通訳され、音声で読み上げられる
+
+## 注意事項
+
+- APIキーは他人に共有しないでください。キーが漏れると、自分のOpenAIアカウントの利用枠を他人に使われてしまう可能性があります
+- このサイト専用のキーを新しく発行し、OpenAIのBilling設定で利用上限（スペンドリミット）を設定してから使うことを強くおすすめします。使い終わったら platform.openai.com でそのキーを無効化（Revoke）すればより安心です
+- 共有PCや公開Wi-Fiでは使わないでください（「このブラウザに保存する」は自分専用の端末でのみ使う）
+- このサイトは運営者側のサーバーを持たず、キーは（保存を選んだ場合）お使いのブラウザ内にのみ保存されます
+- 利用にはOpenAIのAPI利用料がかかります。事前にOpenAI側の料金体系を確認してください
+- 周囲が騒がしい場所では、音声の聞き取り精度が落ちることがあります。できるだけ静かな環境での利用をおすすめします
+</pre>
+    <div class="btns">
+      <button class="btn" onclick="copyPrompt('k3', this)">📋 ガイドをコピー</button>
+      <button class="btn ghost" onclick="downloadText('k3','translator-guide.md', this)">⬇ ガイドをダウンロード（.md）</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>受け取り方・使い方</h2>
+    <ol style="font-size:14.5px;padding-left:22px;">
+      <li>各キットのボタンからコピー、またはダウンロードしてください（GitHubの <a href="https://github.com/fuuuuuuma/gpt-live-guide-ja/tree/main/kit" target="_blank" rel="noopener">kit/ フォルダ</a>からも受け取れます）</li>
+      <li>活用術100選は、フレーズをコピーしてChatGPTの音声モードで声に出して読むだけです</li>
+      <li>翻訳サイトはOpenAIのAPIキー（従量課金）が必要です。ガイドの手順で発行してください</li>
+    </ol>
+    <div class="note"><b>ご注意:</b> AIの出力は内容を確認してから使ってください。APIキーは他人と共有しないでください。</div>
+  </div>
+
+  <pre id="k1" style="display:none;"># 🎁 ChatGPT Live活用術100選
+
+ChatGPTの音声モード「GPT-Live」は、話しかけると同時に聞いてくれる全二重（聞くと話すを同時に行う仕組み）の音声AIです。ここでは画面を見ずに「そのまま話しかけるだけ」で使えるフレーズを100本、場面別にまとめました。受け取り方はシンプルで、気になる項目のフレーズをコピーして、そのままChatGPTの音声モードに声に出して読むだけです。
+
+## 1. 営業・商談
+
+### 1. 商談ロープレの相手役
+場面: 初回商談の練習をしたいとき
+```text
+今からオンライン商談のロープレをしよう。あなたは慎重な企業の担当者役をやって。私が提案するから、途中で疑問があったら遠慮なく割り込んで聞いてね
+```
+
+### 2. 反論処理のシミュレーション
+場面: 価格交渉で値引き要求への切り返しを準備したいとき
+```text
+値引きしてほしいってお客さんに言われた設定で、私に厳しく食い下がってみて。うまく切り返せなかったら後でダメ出しして
+```
+
+### 3. 商談直前の要点確認
+場面: 商談前に相手企業の情報を音声で素早く確認したいとき
+```text
+今日15時から商談する予定の会社について、公開情報をざっと調べてまとめておいて。調べ終わったら教えて、その間は別の話をしてる
+```
+
+### 4. トークスクリプトの壁打ち
+場面: 新しい提案トークを口に出しながら磨きたいとき
+```text
+今から新商品の説明トークを喋ってみるから、聞いてて分かりにくいところがあったら途中で止めて指摘して
+```
+
+### 5. クロージングの言い回し相談
+場面: 契約を後押しする一言に迷っているとき
+```text
+契約を迷っているお客さんに、最後の一押しで使える言い回しを3パターン声で教えて
+```
+
+### 6. 商談メモの即時整理
+場面: 商談直後に話した内容を記録に残したいとき
+```text
+さっきの商談の内容を思い出しながら喋るから、要点だけ箇条書きにして後でテキストにまとめておいて
+```
+
+### 7. 競合比較の即答準備
+場面: 競合製品と比較された時の答え方を練習したいとき
+```text
+うちの商品を競合と比較して聞かれたとき、何て答えるのがいいか一緒に考えて。まず質問役をやってもらえる?
+```
+
+### 8. 沈黙を使った間の練習
+場面: 商談で焦らず間を置く話し方を練習したいとき
+```text
+今から提案を喋るから、私が言葉に詰まって黙っても急いで喋りかけないで。少し待ってから続きを促して
+```
+
+### 9. 提案書の口頭要約
+場面: 提案資料を声だけで手短に説明する練習をしたいとき
+```text
+この提案書の内容を、資料なしで口頭だけで3分で説明する練習をしたい。聞き役になって、分かりにくかったら教えて
+```
+
+### 10. アイスブレイクの引き出し
+場面: 商談冒頭の雑談ネタを増やしたいとき
+```text
+今日話す相手の業界に合わせた雑談の切り出し方を、いくつか声で提案して
+```
+
+## 2. 電話・受付業務
+
+### 1. 電話応対の第一声練習
+場面: 電話に出るときの第一声を磨きたいとき
+```text
+電話がかかってきた設定で、私が応対の第一声を言うから聞いてて。もっと感じよくできるところがあれば教えて
+```
+
+### 2. クレーム対応シミュレーション
+場面: クレーム電話への対応を事前に練習したいとき
+```text
+怒っているお客さんからのクレーム電話の役をやって。私がなだめる練習をするから、途中で本当のクレーマーみたいに割り込んできていいよ
+```
+
+### 3. 折り返し電話のトーク準備
+場面: 折り返し電話をかける前に話す内容を整理したいとき
+```text
+これから折り返し電話をかけるお客さんの要件を話すから、聞きながら伝え漏れがないかチェックして
+```
+
+### 4. 予約受付の聞き取り練習
+場面: 予約の日時や人数を電話で正確に聞き取る練習をしたいとき
+```text
+予約の電話を受ける役をやって。私が日時や人数を聞き返すから、わざと聞き取りにくい喋り方で言ってみて
+```
+
+### 5. 取り次ぎ文言の確認
+場面: 電話を担当者に取り次ぐときの言い回しを確認したいとき
+```text
+担当者が不在のときの取り次ぎの言い方を声で教えて。今から実際に喋ってみるから聞いてて
+```
+
+### 6. 不在時応答メッセージの推敲
+場面: 留守番電話や自動応答の文言を作りたいとき
+```text
+不在時の電話応答メッセージの文言を一緒に考えたい。声に出して読むから、聞いた感じが硬すぎないか教えて
+```
+
+### 7. 電話番号・住所の復唱チェック
+場面: 電話口で聞いた番号や住所を復唱して確認する練習をしたいとき
+```text
+今から適当な電話番号を読み上げるから、私がそれを復唱するね。合ってるか確認して
+```
+
+### 8. 多忙時の一時保留トーク
+場面: 手が離せないときに相手を待たせる言い方を練習したいとき
+```text
+電話中に急な来客があった設定で、相手を一旦待たせる言い方を練習したい。相手役をやって、待たされて不機嫌になってみて
+```
+
+### 9. 電話後の内容整理
+場面: 電話を切った直後に内容を記録したいとき
+```text
+今の電話で聞いた内容を喋るから、誰宛の伝言か分かるようにメモとしてまとめておいて
+```
+
+### 10. 多言語での電話対応練習
+場面: 外国人からの電話にどう対応するか練習したいとき
+```text
+英語で電話がかかってきた設定で、簡単な受け答えの練習をしたい。ゆっくり目の英語で話しかけてみて
+```
+
+## 3. 相談・思考整理
+
+### 1. 決断前の壁打ち相手
+場面: 重要な決断の前に考えを声に出して整理したいとき
+```text
+今から悩んでることを喋りながら整理したい。相槌を打ちながら聞いてて、話が脱線したら軌道修正して
+```
+
+### 2. 一人ブレインストーミング
+場面: アイデア出しを一人で行き詰まったとき
+```text
+新しい企画のアイデアを一緒にブレストしたい。私が思いつきを喋るから、それに乗っかって広げて
+```
+
+### 3. モヤモヤの言語化
+場面: うまく言葉にできない気持ちを整理したいとき
+```text
+頭の中がモヤモヤしてるから、思いつくまま喋らせて。最後に要点をまとめてもらえる?
+```
+
+### 4. 優先順位づけの相談
+場面: やることが多くて何から手をつけるか迷っているとき
+```text
+今抱えてるタスクを全部喋るから、聞きながら優先順位をつける手伝いをして
+```
+
+### 5. 反対意見をあえて聞く
+場面: 自分の考えに偏りがないか確認したいとき
+```text
+私の考えにあえて反対の立場で意見を返して。納得できるまで食い下がっていいから
+```
+
+### 6. 考える時間の確保
+場面: 話しながら考えがまとまらず一呼吸置きたいとき
+```text
+ちょっと考える時間ちょうだい。黙ってる間は急かさないで、まとまったらまた話すから
+```
+
+### 7. 感情を整理する壁打ち
+場面: 苛立ちや不安を誰かに話して落ち着きたいとき
+```text
+今日あったモヤっとした出来事を話すから、否定せずにただ聞いてて。最後に一言だけ感想をちょうだい
+```
+
+### 8. 選択肢の比較検討
+場面: 複数の選択肢で迷って声に出して比べたいとき
+```text
+AとBの選択肢で迷ってるから、それぞれのメリットとデメリットを一緒に声で洗い出して
+```
+
+### 9. 過去の判断の振り返り
+場面: 過去の決断が正しかったか話しながら振り返りたいとき
+```text
+前にした決断について振り返りたい。私が経緯を話すから、聞きながら気になった点を質問して
+```
+
+### 10. 一人会議の進行役
+場面: 一人で複数の視点から意見を出したいとき
+```text
+今から一人会議をするから、あなたは司会役として私に順番に質問を投げかけて
+```
+
+## 4. 通訳・翻訳・語学
+
+### 1. リアルタイム同時通訳
+場面: 外国人との会話をその場で通訳してほしいとき
+```text
+これから話す内容を、聞こえたそばから英語に同時通訳して喋って
+```
+
+### 2. 商談中の通訳サポート
+場面: 海外クライアントとの商談で言葉の壁を越えたいとき
+```text
+今から海外のお客さんとの商談を想定するから、私が日本語で話したら英語に訳して、相手の英語は日本語に訳して伝えて
+```
+
+### 3. 言い回しの自然さチェック
+場面: 外国語で話す表現が不自然でないか確認したいとき
+```text
+今の英語の言い方、ネイティブっぽく聞こえるか教えて。もっと自然な言い方があれば教えて
+```
+
+### 4. 発音の聞き比べ
+場面: 外国語の発音を耳で確認しながら練習したいとき
+```text
+この単語の発音を聞かせて。私が真似して言うから、合ってるか聞いてて
+```
+
+### 5. 旅行会話のシミュレーション
+場面: 海外旅行前に現地での会話を練習したいとき
+```text
+レストランの店員役をやって。私が英語で注文するから、聞き取れなかったら聞き返して
+```
+
+### 6. ビジネスメールの言い回し相談
+場面: 外国語メールの言い回しを声で確認したいとき
+```text
+このメールに書きたい内容を口で説明するから、丁寧な英語表現に直して声で読み上げて
+```
+
+### 7. 通訳しながらのメモ取り
+場面: 通訳してもらいつつ内容を記録に残したいとき
+```text
+通訳しながら、話の要点だけ後でテキストにまとめておいて。今は通訳を優先して
+```
+
+### 8. 会議のアンビエント通訳
+場面: 多言語が飛び交う会議の内容をつかみたいとき
+```text
+周りの英語の会話を聞き取って、要点だけ日本語でこっそり教えて
+```
+
+### 9. 語学学習の日替わりフレーズ
+場面: 毎日少しずつ外国語フレーズを覚えたいとき
+```text
+今日使えそうな英語フレーズを3つ教えて。それぞれ実際に声に出して練習させて
+```
+
+### 10. 通訳スピードの調整依頼
+場面: 通訳のテンポが速すぎたり遅すぎたりするとき
+```text
+訳すのがちょっと速いから、もう少しゆっくり訳して。追いつけるペースにして
+```
+
+## 5. 学習・スキルアップ
+
+### 1. 音声だけの読書要約
+場面: 本の内容を耳で理解したいとき
+```text
+この本のテーマについて、要点を声で説明して。分からない用語が出てきたら途中で聞くから、そのとき止めてね
+```
+
+### 2. 資格試験の口頭クイズ
+場面: 資格試験の勉強を移動中でも進めたいとき
+```text
+資格試験の一問一答クイズを出して。私が答えたら、合ってるか間違ってるかすぐ教えて
+```
+
+### 3. 分からない用語の即質問
+場面: 学習中に出てきた専門用語をその場で聞きたいとき
+```text
+今出てきたこの用語、簡単な言葉で説明して。分かったらすぐ次に進むから
+```
+
+### 4. 音読での発音チェック
+場面: 声に出して読む練習の発音を確認したいとき
+```text
+今から文章を音読するから、聞いてて詰まったところや読み間違いを教えて
+```
+
+### 5. スキマ時間の復習相手
+場面: 短い空き時間に学んだ内容を復習したいとき
+```text
+さっき勉強した内容を私が説明するから、聞いて抜け漏れがないかチェックして
+```
+
+### 6. 新しい分野の入門ガイド
+場面: 未知の分野をゼロから声で学びたいとき
+```text
+この分野について何も知らない前提で、基礎から順番に説明して。分からなくなったら止めるから
+```
+
+### 7. 説明できるか確認するテスト
+場面: 学んだことを本当に理解しているか確認したいとき
+```text
+今学んだ内容を、私が人に説明するつもりで喋るから聞いてて。ちゃんと合ってるか採点して
+```
+
+### 8. スキマ時間の英単語トレーニング
+場面: 通勤中などに単語学習をしたいとき
+```text
+英単語を1つずつ出して、私が意味を答えるクイズをやろう。間違えたら理由も教えて
+```
+
+### 9. 学習計画の壁打ち
+場面: 何をどの順番で学ぶか相談したいとき
+```text
+これから学びたいことを喋るから、聞きながら無理のない学習の順番を一緒に考えて
+```
+
+### 10. 苦手分野の深掘り質問
+場面: 苦手な分野を克服するために質問を重ねたいとき
+```text
+この分野が苦手なんだけど、私がどこでつまずいているのか質問しながら探ってみて
+```
+
+## 6. 情報収集・ニュース
+
+### 1. パーソナルニュースブリーフィング
+場面: 朝の準備をしながら最新ニュースを聞きたいとき
+```text
+今日の主要なニュースをかいつまんで話して。気になったところがあったら途中で聞くから止めていいよ
+```
+
+### 2. 気になったニュースへの深掘り
+場面: ニュースを聞いていて気になった部分を掘り下げたいとき
+```text
+今の話もっと詳しく教えて。関連する情報も裏で調べておいて
+```
+
+### 3. 業界ニュースの定点チェック
+場面: 自分の業界の最新動向を音声で確認したいとき
+```text
+私の業界に関係するニュースがないか調べて、あれば要点を話して
+```
+
+### 4. 天気と株価の朝チェック
+場面: 出かける前に天気や株価をさっと確認したいとき
+```text
+今日の天気と、気になってる銘柄の株価を教えて
+```
+
+### 5. 複数ニュースの比較整理
+場面: 同じ出来事についての違う見方を知りたいとき
+```text
+このニュースについて、違う立場からの見方も含めて話して
+```
+
+### 6. 気になる話題を裏で調べてもらう
+場面: 会話を続けながら気になったことを並行して調べたいとき
+```text
+今の話を続けながら、さっき出てきた件について裏で調べておいて。分かったら会話の合間に教えて
+```
+
+### 7. スポーツ結果の音声チェック
+場面: 応援しているチームの結果を移動中に確認したいとき
+```text
+昨日の試合結果を教えて。詳しいハイライトも簡単に話して
+```
+
+### 8. トレンドワードの解説
+場面: SNSで流行っている言葉の意味を知りたいとき
+```text
+最近よく見かけるこの言葉、どういう意味か背景も含めて教えて
+```
+
+### 9. ニュースの誇張チェック
+場面: 見出しが大げさに感じたニュースの実態を確認したいとき
+```text
+このニュース、見出しは大げさな気がするから、実際何が起きたのか調べて客観的に話して
+```
+
+### 10. 一日の終わりの振り返りニュース
+場面: 一日の主要な出来事をまとめて振り返りたいとき
+```text
+今日一日であったニュースをまとめて振り返って話して
+```
+
+## 7. 移動中・ながら作業
+
+### 1. 運転中の口述メモ
+場面: 運転中に思いついたことを記録したいとき
+```text
+運転中だから画面は見られない。今から思いついたことを喋るから、メモとして残しておいて
+```
+
+### 2. 現場での仕様確認
+場面: 作業現場で図面や仕様を声で確認したいとき
+```text
+今この現場の状況を喋るから、聞きながら確認すべき仕様のポイントを教えて
+```
+
+### 3. 家事をしながらのタスク整理
+場面: 手が離せない家事中にやることを整理したいとき
+```text
+洗い物をしながら今日のタスクを喋るから、優先順位をつけて後でまとめておいて
+```
+
+### 4. 歩きながらの思考整理
+場面: 散歩中に考え事を整理したいとき
+```text
+歩きながら考えてることを喋るから、話が広がりすぎたら要点に戻すよう促して
+```
+
+### 5. 買い物中のリスト管理
+場面: 買い物をしながら必要なものを声で管理したいとき
+```text
+今から買うものを喋っていくから、リストにして最後に読み上げて
+```
+
+### 6. 運転中のRFI口述作成
+場面: 現場に向かう車中で質問事項をまとめたいとき
+```text
+現場に行く途中で、確認したいことを喋るから、あとで質問リストの形にまとめておいて
+```
+
+### 7. ジム中の会話相手
+場面: 運動しながら気分転換に話し相手が欲しいとき
+```text
+トレーニング中だから手は使えない。今日あったことを話すから、聞いて相槌を打ってて
+```
+
+### 8. 荷物運搬中の伝言メモ
+場面: 両手がふさがっているときに伝言を残したいとき
+```text
+今手が離せないから、この伝言をそのまま誰々さん宛のメモとして記録しておいて
+```
+
+### 9. 移動中のスケジュール確認
+場面: 電車やバスの中で今日の予定を確認したいとき
+```text
+今日の予定を喋るから、抜けてる準備がないか一緒にチェックして
+```
+
+### 10. ながら作業中の割り込みメモ
+場面: 作業中に急に思いついたことをすぐ記録したいとき
+```text
+作業の途中で急に思いついたから今喋る。他の話をしてても構わないから、これだけ先に拾ってメモして
+```
+
+## 8. 文章・コンテンツ作成の口述
+
+### 1. ブログ記事の口述ドラフト
+場面: 記事の下書きをまず声で作りたいとき
+```text
+これから記事の内容を口で説明するから、聞きながら文章の構成メモを作っておいて
+```
+
+### 2. SNS投稿文のたたき台
+場面: SNS投稿の文章を声で考えたいとき
+```text
+今日あったことを話すから、それをもとにSNSに投稿できる短い文章のたたき台を作って
+```
+
+### 3. 台本のセリフ読み合わせ
+場面: 動画の台本を声に出して確認したいとき
+```text
+台本のセリフを読み上げるから、聞いてて不自然なところがあったら教えて
+```
+
+### 4. アイデア出しの口頭ブレスト
+場面: コンテンツの企画アイデアを声で広げたいとき
+```text
+新しいコンテンツの企画を考えたいから、思いついたことをどんどん喋る。それに質問を返して広げて
+```
+
+### 5. タイトル案の読み上げ確認
+場面: 考えたタイトル案を声に出して響きを確認したいとき
+```text
+今からタイトル案をいくつか読み上げるから、聞いた印象を教えて
+```
+
+### 6. 話し言葉から文章への変換
+場面: 喋った内容をそのまま文章にしてほしいとき
+```text
+今から自由に喋るから、それを読みやすい文章に整えてまとめておいて
+```
+
+### 7. 構成案の口頭レビュー
+場面: 記事や動画の構成を声で説明してチェックしたいとき
+```text
+今から構成案を順番に説明するから、聞きながら流れが分かりにくいところを指摘して
+```
+
+### 8. キャッチコピーの壁打ち
+場面: 短いキャッチコピーの言葉選びに迷っているとき
+```text
+このサービスのキャッチコピーを一緒に考えたい。私が案を言うから、率直な感想を返して
+```
+
+### 9. インタビュー原稿の口頭整理
+場面: インタビューで聞いた話を口頭で整理したいとき
+```text
+今日聞いたインタビューの内容を話すから、記事にしやすい形に要点を整理しておいて
+```
+
+### 10. 話しながらの推敲
+場面: 書いた文章を声に出して読み直し違和感を探したいとき
+```text
+今書いた文章を読み上げるから、聞いてて引っかかるところがあったら止めて教えて
+```
+
+## 9. 生活・家庭
+
+### 1. 献立の相談
+場面: 今日の夕食を何にするか決めたいとき
+```text
+冷蔵庫にあるものを喋るから、それで作れる献立を提案して
+```
+
+### 2. 子どもの勉強を見ながらの補助
+場面: 子どもの宿題を手伝いながら答え合わせをしたいとき
+```text
+子どもの宿題を見ながら質問することがあるから、聞かれたら答えを教えて。私が忙しいときは代わりに簡単な問題を出しておいて
+```
+
+### 3. 家計の口頭メモ
+場面: 買い物の合計金額をその場で記録したいとき
+```text
+今日使った金額を喋るから、あとで家計簿につけられるようにメモしておいて
+```
+
+### 4. 旅行の持ち物リスト作成
+場面: 旅行準備で忘れ物がないか確認したいとき
+```text
+今回の旅行で持っていくものを喋るから、リストにして足りなそうなものがあれば教えて
+```
+
+### 5. 家族への伝言整理
+場面: 家族に伝えたいことを整理して残したいとき
+```text
+家族に伝えたいことを喋るから、誰に何を伝えるかリストにしておいて
+```
+
+### 6. 料理中の手順確認
+場面: 料理をしながら次の手順を確認したいとき
+```text
+今この工程をやってるから、次にやることを教えて。手が離せないから声だけで進めたい
+```
+
+### 7. 掃除しながらのToDo整理
+場面: 家事をしながら今後のタスクを整理したいとき
+```text
+掃除しながら思いついたやることを喋るから、あとでToDoリストにまとめておいて
+```
+
+### 8. ペットの体調記録
+場面: ペットの様子を口頭で記録に残したいとき
+```text
+今日のペットの様子を喋るから、気になる変化があれば覚えておいて、あとで聞かれたら教えて
+```
+
+### 9. 育児の悩み相談
+場面: 育児で迷っていることを話して整理したいとき
+```text
+育児で今悩んでることを話すから、否定せずに聞いてて、最後に整理する視点をくれる?
+```
+
+### 10. 就寝前の一日の振り返り
+場面: 寝る前に一日を振り返って気持ちを整理したいとき
+```text
+今日あったことを話すから、聞いてるだけでいいよ。最後に一言だけ感想をちょうだい
+```
+
+## 10. 面接・プレゼン練習
+
+### 1. 模擬面接官
+場面: 転職や就職の面接練習をしたいとき
+```text
+模擬面接をしたい。あなたは面接官役として質問して、私の答えに対して深掘りの質問も返して
+```
+
+### 2. プレゼン本番の通し練習
+場面: プレゼンを本番同様に通しで練習したいとき
+```text
+これからプレゼンを最初から最後まで通しで話すから、聞いてて。終わったら感想をまとめて教えて
+```
+
+### 3. 想定質問への回答練習
+場面: 面接やプレゼン後の質疑応答を練習したいとき
+```text
+プレゼンの後に聞かれそうな質問を投げかけて。私が答えるから、答えづらそうなところに突っ込んで
+```
+
+### 4. 話すスピードのチェック
+場面: 早口になっていないか確認したいとき
+```text
+今から話すから、聞いてて早口すぎたり間が足りなかったりしたら教えて
+```
+
+### 5. 自己紹介の練習
+場面: 短い自己紹介を洗練させたいとき
+```text
+30秒の自己紹介を練習したい。何度か喋るから、毎回良くなってるか感想をちょうだい
+```
+
+### 6. 圧迫質問への耐性づくり
+場面: 厳しい質問への対応力をつけたいとき
+```text
+あえて意地悪な質問をしてほしい。私が動揺しても続けていいから、遠慮なく聞いて
+```
+
+### 7. プレゼン資料なしでの説明練習
+場面: 資料を見せずに口頭だけで内容を伝える練習をしたいとき
+```text
+資料を見せない前提で、口頭だけでプレゼン内容を説明する練習をしたい。分かりにくいところがあったら質問して
+```
+
+### 8. 面接での逆質問の準備
+場面: 面接官への逆質問を考えたいとき
+```text
+面接の最後に聞く逆質問を一緒に考えたい。いくつか案を出すから、印象がいいか率直に教えて
+```
+
+### 9. 緊張をほぐす雑談ウォームアップ
+場面: 本番前の緊張をほぐしたいとき
+```text
+本番前に軽く雑談して緊張をほぐしたい。少し気楽な話をしよう
+```
+
+### 10. フィードバックのまとめ依頼
+場面: 練習全体を通しての改善点を最後にまとめて聞きたいとき
+```text
+今までの練習を踏まえて、次に向けて直すべき点を3つにまとめて教えて
+```
+</pre>
+  <pre id="k2" style="display:none;"># 🎁 その他オススメ音声入力AI 5選
+
+ChatGPTの音声モード「GPT-Live」以外にも、声で入力・操作できる便利なツールがいくつもあります。用途に合わせて選ぶための5つを紹介します。価格は変動しやすいため、ここでは載せていません。各サイトで最新の情報を確認してください。
+
+## 一覧表
+
+| サイト名 | URL | 一言 |
+|---|---|---|
+| superwhisper | https://superwhisper.com | Mac向けの音声入力アプリ。ローカル処理に対応し、どのアプリでも使える |
+| Wispr Flow | https://wisprflow.ai | 話すだけで整った文章に整形してくれる音声入力ツール |
+| Aqua Voice | https://withaqua.com | 音声でテキストを書く・編集するエディタ型ツール |
+| MacWhisper | https://macwhisper.com | Whisperベースの文字起こしMacアプリ |
+| Notta | https://www.notta.ai | 日本語に強い会議の文字起こし・要約サービス |
+
+## 各ツールの紹介
+
+### 1. superwhisper
+どんな人向けか: Mac上でどんなアプリを使っていても、キーボード代わりに声で文字入力したい人向けです。
+
+できること:
+- 音声を認識してテキストに変換し、カーソル位置にそのまま入力する仕組みに対応しています
+- ローカル処理に対応しており、ネットに送らず端末内で処理する使い方が選べるのが特徴です
+- チャットアプリ、メモ、コードエディタなど、アプリを選ばず使えます
+
+使いどころ: 手を止めずにメールやメモ、コードのコメントを声で書きたいときに向いています。
+
+### 2. Wispr Flow
+どんな人向けか: 話した内容をそのまま整った文章として仕上げたい人向けです。
+
+できること:
+- 話し言葉を自然な書き言葉に整形してくれるのが特徴です
+- 複数のアプリにまたがって声で入力できる仕組みに対応しています
+- 言い直しや言い淀みを整えて出力する設計になっています
+
+使いどころ: メールやチャットの返信を、話しながらそのまま清書したいときに向いています。
+
+### 3. Aqua Voice
+どんな人向けか: 声だけで長めの文章を書いたり、あとから編集したりしたい人向けです。
+
+できること:
+- 音声でテキストを新規に書き起こす機能に対応しています
+- 話しながら文章の修正・編集も声で指示できるのが特徴です
+- エディタ型の画面で、書いた内容をその場で確認しながら進められます
+
+使いどころ: レポートや議事録の下書きを、キーボードを使わず声だけで進めたいときに向いています。
+
+### 4. MacWhisper
+どんな人向けか: 録音済みの音声や動画をまとめて文字起こししたい人向けです。
+
+できること:
+- Whisperという音声認識モデルをベースにした文字起こしに対応しています
+- 音声ファイルや動画ファイルを読み込んで、まとめてテキスト化できます
+- 書き出し形式やモデルの選択など、細かい設定ができるのが特徴です
+
+使いどころ: 収録した音声・動画素材をあとからまとめて文字起こししたいときに向いています。
+
+### 5. Notta
+どんな人向けか: 会議やインタビューの内容を日本語で正確に記録・要約したい人向けです。
+
+できること:
+- 日本語の音声認識精度に力を入れているのが特徴です
+- 会議の録音をリアルタイムまたは後から文字起こしできます
+- 文字起こしした内容を要約する機能にも対応しています
+
+使いどころ: 商談や会議の議事録づくり、インタビューの文字起こしに向いています。
+
+## 選び方の目安
+
+- コーディング指示など、開発作業のお供に声で入力したい → superwhisper
+- 会議やインタビューの記録を残したい → Notta
+- 文章の執筆・清書を声で進めたい → Wispr Flow / Aqua Voice
+</pre>
+  <footer>ChatGPT Live（GPT-Live）徹底解説 ｜ <a href="https://fuuuuuuma.github.io/gpt-live-guide-ja/slides.html">スライド</a> ｜ <a href="https://fuuuuuuma.github.io/gpt-live-guide-ja/onepager.html">1枚資料</a> ｜ <a href="https://www.youtube.com/@aiagent-kawaru" target="_blank" rel="noopener">AIエージェントチャンネル</a></footer>
+</div>
+<script>
+function copyTextWithFallback(text){
+  function fallback(){
+    try{ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+      const ok=document.execCommand('copy'); ta.remove(); return ok; }catch(e){ return false; }
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).then(()=>true).catch(fallback);
+  }
+  return Promise.resolve(fallback());
+}
+function showCopyResult(btn, ok){
+  const orig=btn.textContent;
+  btn.textContent = ok ? '✔ コピーしました！' : '✖ コピー不可。ダウンロードをご利用ください';
+  setTimeout(()=>{ btn.textContent=orig; }, ok?1800:3500);
+}
+async function copyPrompt(id, btn){
+  const ok = await copyTextWithFallback(document.getElementById(id).textContent);
+  showCopyResult(btn, ok);
+}
+function downloadText(id, filename, btn){
+  try{
+    const text=document.getElementById(id).textContent;
+    const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+  }catch(e){
+    if(btn){ const o=btn.textContent; btn.textContent='✖ 保存できません。コピーをご利用ください'; setTimeout(()=>{btn.textContent=o;},3500); }
+  }
+}
+</script>
+</body>
+</html>

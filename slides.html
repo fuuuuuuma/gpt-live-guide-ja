@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ChatGPT Live（GPT-Live）徹底解説｜AIエージェント・Kawaru スライド</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ===== セマンティックトークン（テーマはこの :root 値だけ差し替え）===== */
+  :root{
+    --brand:#1C3461; --brand-deep:#16284A; --brand-soft:rgba(28,52,97,.08); --brand-line:rgba(28,52,97,.22);
+    --accent:#5BBCD4; --accent-deep:#2C7A93; --accent-soft:rgba(91,188,212,.16);
+    --bg:#F7FAFC; --paper:#FFFFFF; --ink:#1C3461; --ink-mid:#4A6080; --ink-sub:#8098B4; --line:rgba(28,52,97,.12);
+    --canvas:#D8E0EC;
+    --head:'Noto Sans JP'; /* 見出しフォント（claudecodeのみ M PLUS Rounded 1c に差し替え） */
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--canvas);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100vh;font-family:'Noto Sans JP',-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;color:var(--ink);}
+  .slide{width:1280px;height:720px;background:var(--bg);position:relative;display:none;
+    flex-direction:column;align-items:center;justify-content:center;padding:62px 78px 72px;overflow:hidden;}
+  .slide.active{display:flex;}
+  .slide::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;
+    background:linear-gradient(90deg,var(--brand) 0%,var(--brand-deep) 52%,var(--accent) 100%);}
+  /* 装飾 */
+  .coin{position:absolute;width:120px;height:120px;border-radius:50%;background:var(--accent);opacity:.13;top:-42px;left:-36px;}
+  .dots{position:absolute;display:grid;grid-template-columns:repeat(3,6px);gap:7px;opacity:.45;}
+  .dots span{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .dots.br{bottom:84px;right:58px;} .dots.tl{top:88px;left:52px;} .dots.brand span{background:var(--brand);}
+  /* ロゴ（実アイコン） */
+  .logo{position:absolute;top:18px;right:38px;z-index:10;display:flex;align-items:center;gap:10px;}
+  .logo img{width:44px;height:44px;border-radius:50%;border:2px solid var(--paper);box-shadow:0 2px 8px rgba(0,0,0,.14);}
+  .logo .lt{font-family:var(--head);font-weight:900;font-size:14px;color:var(--brand-deep);line-height:1.15;}
+  .logo .lt small{display:block;font-size:10px;color:var(--ink-mid);font-weight:500;letter-spacing:.4px;}
+  .sno{position:absolute;bottom:20px;right:44px;font-size:12px;color:var(--ink-mid);}
+  .kick{position:absolute;bottom:20px;left:44px;font-size:12px;color:var(--ink-mid);}
+  /* タイポ */
+  .eyebrow{font-family:var(--head);font-size:13px;font-weight:900;color:var(--brand-deep);letter-spacing:2px;
+    margin-bottom:14px;display:inline-flex;align-items:center;gap:9px;}
+  .eyebrow::before,.eyebrow::after{content:'';width:20px;height:2px;background:var(--brand-line);border-radius:2px;}
+  h1{font-family:var(--head);font-size:50px;font-weight:900;color:var(--ink);line-height:1.22;text-align:center;margin-bottom:24px;}
+  h2{font-family:var(--head);font-size:38px;font-weight:900;color:var(--ink);line-height:1.25;}
+  .stitle{text-align:center;margin-bottom:26px;}
+  .secno{display:inline-block;font-family:var(--head);font-weight:900;color:var(--accent-deep);
+    background:var(--accent-soft);border-radius:8px;padding:2px 12px;font-size:22px;margin-right:10px;}
+  .lead{font-size:21px;color:var(--ink-mid);line-height:1.7;text-align:center;max-width:900px;}
+  .hl{color:var(--brand-deep);font-weight:900;} .hl-a{color:var(--accent-deep);font-weight:900;}
+  .sep{width:56px;height:4px;background:linear-gradient(90deg,var(--brand),var(--accent));border-radius:3px;margin:14px auto;}
+  .yen-chip{font-family:var(--head);font-weight:900;background:var(--accent);color:var(--ink);border-radius:999px;padding:4px 14px;font-size:13px;}
+  .head-row{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:24px;}
+  .head-row h2{font-size:32px;text-align:left;}
+  /* リスト */
+  .bullets{list-style:none;width:100%;max-width:880px;}
+  .bullets li{font-size:25px;font-weight:700;color:var(--ink);padding:14px 0 14px 44px;position:relative;border-bottom:1px solid var(--line);}
+  .bullets li::before{content:'';position:absolute;left:4px;top:50%;transform:translateY(-50%);width:13px;height:13px;border-radius:50%;background:var(--accent);}
+  .checks{list-style:none;width:100%;max-width:900px;}
+  .checks li{font-size:21px;font-weight:700;color:var(--ink);padding:11px 0 11px 44px;position:relative;}
+  .checks li::before{content:'✔';position:absolute;left:6px;color:var(--brand);font-weight:900;}
+  /* グリッド/カード */
+  .cols{display:grid;gap:18px;width:100%;} .c2{grid-template-columns:1fr 1fr;} .c3{grid-template-columns:repeat(3,1fr);} .c4{grid-template-columns:repeat(4,1fr);}
+  .card{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:24px 20px;box-shadow:0 3px 12px rgba(0,0,0,.05);}
+  .card.accent{border-color:var(--brand);border-width:2px;}
+  .card .pin{width:42px;height:42px;border-radius:50%;background:var(--accent);color:var(--ink);font-family:var(--head);
+    font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 2px 0 var(--accent-deep);}
+  .card h3{font-family:var(--head);font-size:21px;font-weight:900;color:var(--ink);margin-bottom:8px;}
+  .card p{font-size:15px;color:var(--ink-mid);line-height:1.6;}
+  .card .mark{font-size:12px;font-weight:700;color:var(--brand-deep);margin-top:8px;}
+  .center{text-align:center;} .center .pin{margin:0 auto 12px;}
+  /* 数値スタット */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%;max-width:1000px;}
+  .stat{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:24px;text-align:center;}
+  .stat .n{font-family:var(--head);font-size:46px;font-weight:900;color:var(--brand-deep);line-height:1;}
+  .stat .n small{font-size:20px;} .stat .u{font-size:13px;color:var(--ink-mid);margin-top:4px;} .stat .l{font-size:15px;font-weight:700;color:var(--ink);margin-top:8px;}
+  /* フロー（矢印連結） */
+  .flow{display:flex;align-items:stretch;gap:0;width:100%;max-width:1080px;}
+  .flow .step{flex:1;background:var(--paper);border:1.5px solid var(--line);border-top:4px solid var(--brand);border-radius:12px;padding:18px 14px;text-align:center;}
+  .flow .step .t{font-family:var(--head);font-weight:900;font-size:17px;color:var(--ink);margin-bottom:6px;}
+  .flow .step .d{font-size:13px;color:var(--ink-mid);line-height:1.5;}
+  .flow .arrow{display:flex;align-items:center;color:var(--accent);font-size:26px;font-weight:900;padding:0 6px;}
+  /* サイクル（活用の循環） */
+  .cycle{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;max-width:1000px;}
+  .cycle .node{width:150px;height:150px;border-radius:50%;background:var(--brand-soft);border:2px solid var(--brand);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;}
+  .cycle .node b{font-family:var(--head);font-size:16px;color:var(--brand-deep);} .cycle .node span{font-size:12px;color:var(--ink-mid);}
+  .cycle .ar{color:var(--accent);font-size:28px;font-weight:900;}
+  /* タイムライン */
+  .timeline{width:100%;max-width:1000px;}
+  .timeline .row{display:flex;gap:18px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line);}
+  .timeline .tbadge{flex-shrink:0;background:var(--brand);color:#fff;font-family:var(--head);font-weight:900;border-radius:8px;padding:6px 14px;font-size:14px;min-width:96px;text-align:center;}
+  .timeline .row b{font-family:var(--head);font-size:18px;color:var(--ink);} .timeline .row p{font-size:14px;color:var(--ink-mid);margin-top:3px;}
+  /* 比較表 */
+  table.cmp{width:100%;max-width:1040px;border-collapse:separate;border-spacing:0;font-size:18px;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;overflow:hidden;}
+  table.cmp th,table.cmp td{padding:13px 18px;text-align:left;border-bottom:1px solid var(--line);}
+  table.cmp thead th{background:var(--ink);color:#fff;font-family:var(--head);font-weight:700;font-size:16px;}
+  table.cmp thead th:first-child{background:var(--brand-deep);}
+  table.cmp tbody tr:last-child td{border-bottom:none;} table.cmp td:first-child{font-weight:700;}
+  table.cmp .yes{color:var(--brand-deep);font-weight:900;} table.cmp .no{color:var(--ink-mid);}
+  /* 価格カード */
+  .price{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%;max-width:1000px;}
+  .price .p{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:24px 20px;text-align:center;}
+  .price .p.best{border:2px solid var(--accent);box-shadow:0 6px 18px var(--accent-soft);position:relative;}
+  .price .p.best::before{content:'人気';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--ink);font-family:var(--head);font-weight:900;font-size:12px;border-radius:999px;padding:3px 14px;}
+  .price .p .name{font-family:var(--head);font-weight:900;font-size:18px;color:var(--ink);}
+  .price .p .amt{font-family:var(--head);font-size:34px;font-weight:900;color:var(--brand-deep);margin:8px 0;}
+  .price .p .amt small{font-size:14px;color:var(--ink-mid);} .price .p ul{list-style:none;text-align:left;margin-top:10px;}
+  .price .p li{font-size:13px;color:var(--ink-mid);padding:5px 0 5px 20px;position:relative;}
+  .price .p li::before{content:'✔';position:absolute;left:0;color:var(--brand);}
+  /* 機能グリッド */
+  .feat{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;width:100%;max-width:1040px;}
+  .feat .f{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;}
+  .feat .f .ic{width:38px;height:38px;border-radius:10px;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--head);font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+  .feat .f b{font-size:14px;color:var(--ink);display:block;} .feat .f span{font-size:11.5px;color:var(--ink-mid);}
+  /* 悩み→こう頼む */
+  .map{list-style:none;width:100%;max-width:1000px;}
+  .map li{display:flex;align-items:center;gap:14px;font-size:18px;font-weight:600;color:var(--ink);padding:13px 16px;margin-bottom:10px;background:var(--paper);border:1.5px solid var(--line);border-left:4px solid var(--brand);border-radius:12px;}
+  .map li .q{flex:1;} .map li .ar{color:var(--accent);font-weight:900;font-size:20px;} .map li .a{flex:1.3;color:var(--brand-deep);font-weight:700;}
+  /* ステップ */
+  .steps{list-style:none;width:100%;max-width:940px;}
+  .steps li{font-size:19px;font-weight:600;color:var(--ink);padding:13px 16px 13px 58px;position:relative;margin-bottom:10px;background:var(--paper);border:1.5px solid var(--line);border-left:4px solid var(--brand);border-radius:12px;}
+  .steps li .n{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:30px;height:30px;background:var(--accent);color:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:900;font-size:15px;box-shadow:0 2px 0 var(--accent-deep);}
+  /* プロンプト */
+  .prompt{font-family:ui-monospace,Menlo,monospace;font-size:16px;background:var(--ink);color:#ECECEA;border-radius:12px;padding:18px 22px;line-height:1.7;width:100%;max-width:980px;text-align:left;}
+  .prompt .c{color:var(--accent);} .prompt .cm{color:var(--ink-sub);}
+  /* before/after */
+  .ba{display:flex;align-items:center;gap:20px;width:100%;max-width:1040px;}
+  .ba .panel{flex:1;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:22px;}
+  .ba .panel.after{border-color:var(--brand);border-width:2px;}
+  .ba .panel .tag{font-family:var(--head);font-weight:900;font-size:13px;border-radius:999px;padding:3px 12px;display:inline-block;margin-bottom:10px;}
+  .ba .panel.before .tag{background:var(--line);color:var(--ink-mid);} .ba .panel.after .tag{background:var(--brand);color:#fff;}
+  .ba .panel ul{list-style:none;} .ba .panel li{font-size:15px;color:var(--ink);padding:6px 0 6px 22px;position:relative;}
+  .ba .panel.before li::before{content:'×';position:absolute;left:0;color:var(--ink-sub);font-weight:900;}
+  .ba .panel.after li::before{content:'○';position:absolute;left:0;color:var(--brand);font-weight:900;}
+  .ba .mid{color:var(--accent);font-size:34px;font-weight:900;}
+  /* FAQ */
+  .faq{width:100%;max-width:980px;} .faq .qa{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px;}
+  .faq .qa .q{font-family:var(--head);font-weight:900;font-size:17px;color:var(--brand-deep);}
+  .faq .qa .q::before{content:'Q. ';color:var(--accent-deep);} .faq .qa .a{font-size:15px;color:var(--ink-mid);margin-top:5px;} .faq .qa .a::before{content:'A. ';color:var(--ink);font-weight:700;}
+  /* 画像/図解プレースホルダ枠 */
+  .imgbox{border:2px dashed var(--brand-line);border-radius:14px;background:var(--brand-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--brand-deep);font-weight:700;text-align:center;padding:18px;}
+  .imgbox .ic{font-size:30px;margin-bottom:6px;} .imgbox small{display:block;color:var(--ink-mid);font-weight:500;font-size:12px;margin-top:4px;}
+  /* 注意ボックス */
+  .note-box{background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:14px;padding:20px 24px;max-width:1000px;}
+  .note-box h3{font-family:var(--head);font-weight:900;color:var(--accent-deep);font-size:18px;margin-bottom:8px;}
+  .note-box ul{margin-left:20px;font-size:15px;color:var(--ink);} .note-box li{margin-bottom:5px;}
+  .ghost{font-size:13px;color:var(--ink-mid);margin-top:10px;text-align:center;}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent);border:2px solid var(--accent-deep);color:var(--ink);border-radius:999px;padding:12px 28px;font-family:var(--head);font-size:20px;font-weight:900;margin-top:6px;}
+  .badge{display:inline-block;background:var(--brand-deep);color:#fff;font-size:13px;font-weight:700;border-radius:6px;padding:4px 12px;}
+  /* TL;DR */
+  .tldr{display:flex;gap:16px;width:100%;max-width:1040px;}
+  .tldr .t{flex:1;background:var(--paper);border:1.5px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:22px 20px;}
+  .tldr .t .k{font-family:var(--head);font-weight:900;color:var(--ink);font-size:14px;margin-bottom:7px;letter-spacing:.5px;}
+  .tldr .t p{font-size:17px;color:var(--ink);font-weight:700;line-height:1.5;}
+  /* TOC */
+  .toc{columns:2;column-gap:48px;width:100%;max-width:980px;list-style:none;}
+  .toc li{font-size:18px;font-weight:700;color:var(--ink);padding:9px 0 9px 40px;position:relative;border-bottom:1px solid var(--line);break-inside:avoid;}
+  .toc li span{position:absolute;left:0;top:9px;width:26px;height:26px;background:var(--brand-soft);color:var(--brand-deep);border-radius:7px;font-family:var(--head);font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;}
+  /* ナビ */
+  .nav{display:flex;align-items:center;gap:20px;margin-top:16px;}
+  .nav-btn{background:var(--paper);border:1.5px solid var(--line);color:var(--brand-deep);padding:9px 26px;border-radius:10px;cursor:pointer;font-family:var(--head);font-size:14px;font-weight:700;transition:.18s;}
+  .nav-btn:hover{border-color:var(--brand);background:var(--brand-soft);}
+  .counter{color:var(--ink-mid);font-size:14px;min-width:70px;text-align:center;}
+  .draft-tag{position:fixed;top:10px;left:10px;background:var(--brand-deep);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;z-index:99;letter-spacing:.4px;}
+  /* ===== 追加: X投稿再現カード（既存トークンのみ使用・:root非変更） ===== */
+  .xcard{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:22px 24px;text-align:left;width:100%;max-width:640px;box-shadow:0 3px 12px rgba(0,0,0,.05);}
+  .xcard .xhead{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .xcard .xavatar{flex-shrink:0;width:46px;height:46px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:900;font-size:20px;}
+  .xcard .xname{font-family:var(--head);font-weight:900;font-size:16px;color:var(--ink);display:flex;align-items:center;gap:6px;}
+  .xcard .xcheck{display:inline-flex;width:15px;height:15px;background:var(--accent-deep);color:#fff;border-radius:50%;align-items:center;justify-content:center;font-size:9px;font-weight:900;}
+  .xcard .xhandle{font-size:13px;color:var(--ink-mid);}
+  .xcard .xbody{font-size:17px;color:var(--ink);line-height:1.65;margin-bottom:10px;}
+  .xcard .xtrans{font-size:14px;color:var(--ink-mid);line-height:1.6;border-top:1px solid var(--line);padding-top:10px;margin-top:6px;}
+  .xcard .xmeta{display:flex;gap:22px;font-size:13px;color:var(--ink-mid);margin-top:12px;}
+  .xcard .xmeta b{color:var(--brand-deep);}
+  .qrbox{width:172px;height:172px;flex-shrink:0;border-radius:14px;border:2px solid var(--brand);box-shadow:0 5px 16px rgba(0,0,0,.14);background:#fff url('data:image/png;base64,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') center/88% no-repeat;margin:0 auto;}
+  .qr-cap{font-size:12.5px;color:var(--ink-mid);font-weight:700;margin-top:8px;text-align:center;}
+  .giftflex{display:flex;gap:36px;align-items:center;justify-content:center;max-width:960px;margin:20px auto 0;}
+  .giftflex ul{list-style:none;text-align:left;font-size:16.5px;line-height:2.05;color:var(--ink);padding:0;}
+  .giftflex li b{color:var(--brand-deep);}
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="kawaru-logo" viewBox="0 0 406 93">
+    <rect x="6.67572e-06" y="13.4815" width="7.93029" height="74.5447" fill="currentColor"/>
+    <path d="M18.2397 52.7235L24.2772 47.5817L57.8911 88.0582L48.3318 88.0582L18.2397 52.7235Z" fill="#5BBCD4"/>
+    <path d="M34.8933 49.5514L40.9308 44.4096L77.2278 88.0366L67.4075 88.0262L34.8933 49.5514Z" fill="#5BBCD4"/>
+    <rect x="57.1908" y="2.92276" width="7.93029" height="83.5485" transform="rotate(42.3764 57.1908 2.92276)" fill="currentColor"/>
+    <rect x="59.4772" width="7.93029" height="22.2048" fill="currentColor"/>
+    <rect x="44.4096" y="7.9303" width="7.93029" height="22.9978" transform="rotate(-90 44.4096 7.9303)" fill="currentColor"/>
+    <path d="M110.882 61.3999L110.204 47.3281L135.413 20.7649H148.958L126.233 45.2211L119.46 52.4451L110.882 61.3999ZM99.9703 73.4399V20.7649H112.086V73.4399H99.9703ZM136.015 73.4399L117.278 50.4886L125.254 41.8349L150.237 73.4399H136.015ZM181.053 73.4399V65.5386L180.301 63.8079V49.6609C180.301 47.1525 179.523 45.196 177.968 43.7914C176.463 42.3867 174.13 41.6844 170.97 41.6844C168.813 41.6844 166.681 42.0355 164.574 42.7379C162.517 43.39 160.761 44.293 159.306 45.4469L155.092 37.2446C157.299 35.6895 159.958 34.4855 163.069 33.6326C166.179 32.7798 169.339 32.3534 172.55 32.3534C178.721 32.3534 183.512 33.8082 186.923 36.7179C190.334 39.6275 192.04 44.1676 192.04 50.3381V73.4399H181.053ZM168.712 74.0419C165.552 74.0419 162.843 73.5151 160.585 72.4616C158.328 71.358 156.597 69.878 155.393 68.0219C154.189 66.1657 153.587 64.0838 153.587 61.7761C153.587 59.3681 154.164 57.2611 155.318 55.4551C156.522 53.6491 158.403 52.2445 160.962 51.2411C163.52 50.1876 166.856 49.6609 170.97 49.6609H181.731V56.5086H172.249C169.49 56.5086 167.584 56.9601 166.53 57.8631C165.527 58.7661 165.025 59.8949 165.025 61.2494C165.025 62.7544 165.602 63.9584 166.756 64.8614C167.96 65.7142 169.59 66.1406 171.647 66.1406C173.604 66.1406 175.359 65.6891 176.915 64.7861C178.47 63.833 179.599 62.4534 180.301 60.6474L182.107 66.0654C181.254 68.674 179.699 70.6556 177.441 72.0101C175.184 73.3646 172.274 74.0419 168.712 74.0419ZM213.443 73.4399L198.844 32.9554H209.906L222.021 67.7961H216.754L229.396 32.9554H239.329L251.594 67.7961H246.327L258.818 32.9554H269.203L254.529 73.4399H243.166L232.406 43.5656H235.867L224.73 73.4399H213.443ZM300.427 73.4399V65.5386L299.675 63.8079V49.6609C299.675 47.1525 298.897 45.196 297.342 43.7914C295.837 42.3867 293.504 41.6844 290.344 41.6844C288.187 41.6844 286.055 42.0355 283.948 42.7379C281.891 43.39 280.135 44.293 278.68 45.4469L274.466 37.2446C276.674 35.6895 279.332 34.4855 282.443 33.6326C285.553 32.7798 288.714 32.3534 291.924 32.3534C298.095 32.3534 302.886 33.8082 306.297 36.7179C309.708 39.6275 311.414 44.1676 311.414 50.3381V73.4399H300.427ZM288.086 74.0419C284.926 74.0419 282.217 73.5151 279.959 72.4616C277.702 71.358 275.971 69.878 274.767 68.0219C273.563 66.1657 272.961 64.0838 272.961 61.7761C272.961 59.3681 273.538 57.2611 274.692 55.4551C275.896 53.6491 277.777 52.2445 280.336 51.2411C282.894 50.1876 286.23 49.6609 290.344 49.6609H301.105V56.5086H291.623C288.864 56.5086 286.958 56.9601 285.904 57.8631C284.901 58.7661 284.399 59.8949 284.399 61.2494C284.399 62.7544 284.976 63.9584 286.13 64.8614C287.334 65.7142 288.964 66.1406 291.021 66.1406C292.978 66.1406 294.734 65.6891 296.289 64.7861C297.844 63.833 298.973 62.4534 299.675 60.6474L301.481 66.0654C300.628 68.674 299.073 70.6556 296.815 72.0101C294.558 73.3646 291.648 74.0419 288.086 74.0419ZM324.296 73.4399V32.9554H335.508V44.3934L333.928 41.0824C335.132 38.2229 337.063 36.0657 339.722 34.6109C342.381 33.1059 345.617 32.3534 349.429 32.3534V43.1894C348.928 43.1392 348.476 43.1141 348.075 43.1141C347.674 43.064 347.247 43.0389 346.796 43.0389C343.585 43.0389 340.976 43.967 338.97 45.8231C337.013 47.6291 336.035 50.4635 336.035 54.3264V73.4399H324.296ZM376.043 74.0419C372.681 74.0419 369.671 73.3897 367.013 72.0854C364.404 70.781 362.372 68.7995 360.917 66.1406C359.462 63.4316 358.735 59.9952 358.735 55.8314V32.9554H370.474V54.1006C370.474 57.4618 371.176 59.945 372.581 61.5504C374.036 63.1055 376.068 63.8831 378.676 63.8831C380.482 63.8831 382.088 63.5069 383.492 62.7544C384.897 61.9517 386.001 60.7477 386.803 59.1424C387.606 57.4869 388.007 55.43 388.007 52.9719V32.9554H399.746V73.4399H388.609V62.3029L390.641 65.5386C389.287 68.348 387.28 70.48 384.621 71.9349C382.012 73.3395 379.153 74.0419 376.043 74.0419Z" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<!-- 01 表紙 -->
+<div class="slide active"><span class="coin"></span>
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="dots tl"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <p class="eyebrow">AI を使いこなす</p>
+  <h1 style="font-size:52px;">ChatGPT Live<br><span class="hl">（GPT-Live）</span>徹底解説</h1>
+  <div class="sep"></div>
+  <p class="lead" style="font-weight:700;">「声の仕事」がAIに置き換わる — 営業・電話代行はその入り口</p>
+  <span class="yen-chip" style="margin-top:20px;">2026年7月10日</span>
+  <span class="kick">AIエージェント/Kawaru</span><span class="sno">1</span>
+</div>
+
+<!-- 02 目次 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">CONTENTS</p><h2 class="stitle">この資料の流れ</h2>
+  <ul class="toc">
+    <li><span>1</span>発表の瞬間 — 公式Xスレッドを読む</li>
+    <li><span>2</span>GPT-Liveとは何か</li>
+    <li><span>3</span>何が新しいのか — 3本柱</li>
+    <li><span>4</span>数字で見るGPT-Live</li>
+    <li><span>5</span>「声の仕事」が置き換わる構造</li>
+    <li><span>6</span>事例集 — 営業・電話代行・通訳</li>
+    <li><span>7</span>キーボードを叩かない未来</li>
+    <li><span>8</span>使い方・注意点・まとめ</li>
+  </ul>
+  <span class="kick">目次</span><span class="sno">2</span>
+</div>
+
+<!-- 03 TL;DR -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">まず3行で</p><h2 class="stitle">結論</h2>
+  <div class="tldr">
+    <div class="t"><div class="k">POINT 1</div><p>OpenAIが2026年7月8日、聞きながら同時に話せる「フルデュプレックス（全二重）」音声モデル GPT-Live を発表</p></div>
+    <div class="t"><div class="k">POINT 2</div><p>賢さも別物。難しい質問は裏でGPT-5.5に委譲され、GPQAは45.3%から84.2%へ</p></div>
+    <div class="t"><div class="k">POINT 3</div><p>「声でやりとりする仕事」——営業電話・電話代行・相談・通訳——が実用レベルでAIに置き換わる時代に入った</p></div>
+  </div>
+  <span class="kick">TL;DR</span><span class="sno">3</span>
+</div>
+
+<!-- 04 発表の瞬間 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">01</span><h2>発表の瞬間 — 公式Xより</h2></div>
+  <div class="xcard">
+    <div class="xhead">
+      <div class="xavatar">✳</div>
+      <div><div class="xname">OpenAI <span class="xcheck">✓</span></div><div class="xhandle">@OpenAI ・ 2026年7月8日</div></div>
+    </div>
+    <div class="xbody">Introducing GPT-Live, a new generation of voice models for natural human-AI interaction. Rolling out in ChatGPT starting today. You'll want to turn the sound on for this one.</div>
+    <div class="xtrans">GPT-Liveを発表します。人間とAIの自然な対話のための、新世代の音声モデル群です。本日からChatGPTに展開開始。この動画は音を出して見てください。</div>
+    <div class="xmeta"><span>👍 <b>24,139</b></span><span>👁 表示 <b>734万回</b></span></div>
+  </div>
+  <span class="kick">発表の瞬間</span><span class="sno">4</span>
+</div>
+
+<!-- 05 GPT-Liveとは -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">02</span><h2>GPT-Liveとは？</h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><p style="font-size:19px;line-height:1.8;font-weight:600;">OpenAIが発表した<span class="hl">新世代の音声モデル群</span>。ChatGPTの音声モード（Voice）として提供され、有料標準モデルは<span class="hl">GPT-Live-1</span>、無料標準モデルは<span class="hl">GPT-Live-1 mini</span>と呼ばれます。</p></div>
+    <div><ul class="checks">
+      <li>提供先: ChatGPTの iOS / Android / Web</li>
+      <li>使い方: Voiceボタンをタップするだけ</li>
+      <li>7月9日時点でGo/Plus/Proは展開完了</li>
+      <li>無料ユーザーへの展開は進行中</li>
+    </ul></div>
+  </div>
+  <span class="kick">GPT-Liveとは</span><span class="sno">5</span>
+</div>
+
+<!-- 06 Before/After -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">02</span><h2>Advanced Voice Mode → GPT-Live</h2></div>
+  <div class="ba">
+    <div class="panel before"><span class="tag">Before：Advanced Voice Mode</span><ul>
+      <li>ターン制。相手が話し終わるのを待つ</li>
+      <li>割り込むと不自然な間ができる</li>
+      <li>実質「音声入力と読み上げの往復」</li>
+    </ul></div>
+    <div class="mid">→</div>
+    <div class="panel after"><span class="tag">After：GPT-Live（全二重）</span><ul>
+      <li>聞くと話すを同時に処理</li>
+      <li>相づち・割り込み・沈黙の保持が自然</li>
+      <li>時間感覚を保ち、ライブ翻訳も可能</li>
+    </ul></div>
+  </div>
+  <span class="kick">Before/After</span><span class="sno">6</span>
+</div>
+
+<!-- 07 全体像フロー -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">02</span><h2>GPT-Liveの全体像</h2></div>
+  <div class="flow">
+    <div class="step"><div class="t">① 話す</div><div class="d">こちらは自由に話しかける</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">② GPT-Liveが即応</div><div class="d">相づち・間合いで自然に応答</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">③ 難題は裏で委譲</div><div class="d">検索・深い推論をGPT-5.5へ</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">④ 会話に折込み</div><div class="d">結果を自然に会話へ戻す</div></div>
+  </div>
+  <p class="ghost">出典: OpenAI公式Xスレッド（2026年7月8日）</p>
+  <span class="kick">全体像フロー</span><span class="sno">7</span>
+</div>
+
+<!-- 08 3本柱の提示 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">公式スレッドの主張</p><h2 class="stitle"><span class="secno">03</span>何が新しいのか — 3つの柱</h2>
+  <div class="cols c3">
+    <div class="card center"><div class="pin">1</div><h3>フルデュプレックス</h3><p>聞くと話すを同時に行う全二重構造</p></div>
+    <div class="card center accent"><div class="pin">2</div><h3>人格と会話の質</h3><p>自然で楽しい、はっきりした人格</p></div>
+    <div class="card center"><div class="pin">3</div><h3>推論委譲</h3><p>難題は裏でフロンティアモデルへ</p></div>
+  </div>
+  <span class="kick">3本柱</span><span class="sno">8</span>
+</div>
+
+<!-- 09 柱①フルデュプレックス -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">03</span><h2>柱① <span class="hl">フルデュプレックス</span></h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>毎秒何度も「話す/聞く/黙る/割込む/ツールを呼ぶ」を判断（Impress報道）</li>
+      <li>相づち・割り込み・沈黙の保持が自然</li>
+      <li>より正確な時間感覚を維持</li>
+      <li>この構造がライブ翻訳も可能にする</li>
+    </ul></div>
+    <div class="card"><h3>公式の説明</h3><p style="font-size:16px;line-height:1.7;">"GPT-Live is built on a full-duplex architecture, meaning it can listen and speak at the same time."</p></div>
+  </div>
+  <span class="kick">柱①フルデュプレックス</span><span class="sno">9</span>
+</div>
+
+<!-- 10 柱②人格 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">03</span><h2>柱② <span class="hl">人格と会話の質</span></h2></div>
+  <div class="stats" style="margin-bottom:16px;">
+    <div class="stat"><div class="n">75.7<small>%</small></div><div class="u">GPT-Live-1がAVMより選好された割合</div></div>
+    <div class="stat"><div class="n">69.2<small>%</small></div><div class="u">無料版 mini でも選好された割合</div></div>
+    <div class="stat"><div class="n">9<small>種</small></div><div class="u">リマスターされた音声</div></div>
+  </div>
+  <p class="lead">Arbor, Breeze, Cove, Ember, Juniper, Maple, Sol, Spruce, Vale の9音声を調整（報道）</p>
+  <span class="kick">柱②人格</span><span class="sno">10</span>
+</div>
+
+<!-- 11 柱③推論委譲 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">03</span><h2>柱③ <span class="hl">推論委譲</span></h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>会話のテンポはGPT-Liveが守り続ける</li>
+      <li>検索・深い推論・複雑な作業はGPT-5.5等へ裏で委譲</li>
+      <li>結果を会話に自然に折り込んで返す</li>
+      <li>推論の深さは Instant / Medium / High の3段階</li>
+    </ul></div>
+    <div class="card"><h3>視覚カード</h3><p style="font-size:16px;line-height:1.7;">天気・株価・スポーツなどは音声と並行して画面にも表示。声だけでは伝わりにくい情報を補います。</p></div>
+  </div>
+  <span class="kick">柱③推論委譲</span><span class="sno">11</span>
+</div>
+
+<!-- 12 公式スレッド再現その2 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">03</span><h2>公式スレッドより — もう2枚</h2></div>
+  <div class="cols c2">
+    <div class="xcard" style="max-width:none;">
+      <div class="xhead"><div class="xavatar">✳</div><div><div class="xname">OpenAI <span class="xcheck">✓</span></div><div class="xhandle">@OpenAI</div></div></div>
+      <div class="xbody" style="font-size:15px;">GPT-Live is built on a full-duplex architecture, meaning it can listen and speak at the same time.</div>
+      <div class="xtrans" style="font-size:13px;">全二重構造で、聞くことと話すことを同時に行える。</div>
+    </div>
+    <div class="xcard" style="max-width:none;">
+      <div class="xhead"><div class="xavatar">✳</div><div><div class="xname">OpenAI <span class="xcheck">✓</span></div><div class="xhandle">@OpenAI</div></div></div>
+      <div class="xbody" style="font-size:15px;">Our full-duplex architecture allows the model to engage in more natural back-and-forth, maintain a better sense of time, and even perform live translation.</div>
+      <div class="xtrans" style="font-size:13px;">より自然なやりとり、正確な時間感覚、そしてライブ翻訳までを可能にする。</div>
+    </div>
+  </div>
+  <span class="kick">公式スレッド②</span><span class="sno">12</span>
+</div>
+
+<!-- 13 ベンチ数値スタット -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">04</span><h2>数字で見るGPT-Live</h2></div>
+  <div class="stats">
+    <div class="stat"><div class="n">84.2<small>%</small></div><div class="u">GPQA（AVMは45.3%）</div></div>
+    <div class="stat"><div class="n">75.2<small>%</small></div><div class="u">BrowseComp（AVMは0.7%）</div></div>
+    <div class="stat"><div class="n">75.7<small>%</small></div><div class="u">会話選好（対AVM）</div></div>
+  </div>
+  <p class="ghost">出典: OpenAI公式ブログの数値（各メディア報道経由）</p>
+  <span class="kick">数字で見る</span><span class="sno">13</span>
+</div>
+
+<!-- 14 ベンチ比較表 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">04</span><h2>ベンチマーク比較</h2></div>
+  <table class="cmp"><thead><tr><th>指標</th><th>Advanced Voice Mode</th><th>GPT-Live-1（High）</th></tr></thead>
+    <tbody>
+    <tr><td>会話選好（人間評価）</td><td class="no">—</td><td class="yes">75.7%が選好（miniは69.2%）</td></tr>
+    <tr><td>GPQA（科学推論）</td><td class="no">45.3%</td><td class="yes">84.2%</td></tr>
+    <tr><td>BrowseComp（Web検索）</td><td class="no">0.7%</td><td class="yes">75.2%</td></tr>
+    <tr><td>τ³-Voice Telecom（顧客サポート模擬）</td><td class="no">—</td><td class="yes">全GPT-Live版がAVMを上回る</td></tr>
+    </tbody></table>
+  <p class="ghost">出典: OpenAI公式ブログの数値（各メディア報道経由）</p>
+  <span class="kick">ベンチ比較</span><span class="sno">14</span>
+</div>
+
+<!-- 15 プラン表 -->
+
+<!-- 🎁 プレゼント訴求（QR） -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">🎁 プレゼント</p><h2 class="stitle">この賢さ、今日から試せるキットがあります</h2>
+  <div class="giftflex">
+    <div class="card" style="text-align:left;padding:26px 32px;">
+      <ul>
+        <li><b>ChatGPT Live活用術100選</b> — 話しかけるだけのフレーズ集（1本ずつコピー可）</li>
+        <li><b>おすすめ音声入力AI 5選</b> — キーボードレス化の相棒ツール</li>
+        <li><b>リアルタイム翻訳サイト</b> — APIキーを入れるだけの同時通訳（デプロイ済み）</li>
+      </ul>
+      <p style="font-size:13.5px;color:var(--ink-mid);margin-top:10px;">受け取りは概要欄のリンク、またはQRコードから</p>
+    </div>
+    <div><div class="qrbox"></div><div class="qr-cap">スマホで読み取る 📱</div></div>
+  </div>
+  <span class="kick">プレゼント①</span><span class="sno"></span>
+</div>
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">04</span><h2>プランと標準モデル</h2></div>
+  <div class="price">
+    <div class="p"><div class="name">Free</div><div class="amt">$0</div><ul><li>GPT-Live-1 mini</li><li>まず試すのに最適</li></ul></div>
+    <div class="p best"><div class="name">Go</div><div class="amt">$8<small>/月</small></div><ul><li>GPT-Live-1</li><li>個人利用に</li></ul></div>
+    <div class="p"><div class="name">Plus</div><div class="amt">$20<small>/月</small></div><ul><li>GPT-Live-1</li><li>本格利用に</li></ul></div>
+  </div>
+  <p class="ghost">Pro（$200/月）はGPT-Live-1で利用上限が大きい。Business/Enterprise/Eduは初期非対応と報じられています</p>
+  <span class="kick">プラン</span><span class="sno">15</span>
+</div>
+
+<!-- 16 声の仕事の構造分解 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">05</span><h2>「声の仕事」の構造分解</h2></div>
+  <div class="feat">
+    <div class="f"><div class="ic">①</div><b>聞く</b><span>フルデュプレックスが直撃</span></div>
+    <div class="f"><div class="ic">②</div><b>即応する</b><span>フルデュプレックスが直撃</span></div>
+    <div class="f"><div class="ic">③</div><b>調べる</b><span>推論委譲とWeb検索が直撃</span></div>
+    <div class="f"><div class="ic">④</div><b>記録する</b><span>テキスト化と要約が直撃</span></div>
+  </div>
+  <p class="lead" style="margin-top:18px;">営業電話・電話代行・受付・サポート窓口——「電話の仕事」の構成要素が今回の発表で全部そろいました</p>
+  <span class="kick">構造分解</span><span class="sno">16</span>
+</div>
+
+<!-- 17 事例①営業電話 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">06</span><h2>事例① <span class="hl">営業電話</span></h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>価格交渉・反論処理を声でロールプレイ</li>
+      <li>AIが顧客役として反問し、終了後に口頭でフィードバック</li>
+      <li>「間」や「言い淀み」まで練習できる</li>
+    </ul></div>
+    <div class="card"><h3>X上の報告</h3><p style="font-size:15px;line-height:1.7;">従来の音声モードでのコールド架電で「2〜3%の商談化率だった」という報告が見られました。個人の報告であり、公式統計ではありません。</p></div>
+  </div>
+  <span class="kick">事例①営業電話</span><span class="sno">17</span>
+</div>
+
+<!-- 18 事例②電話代行・サポート -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">06</span><h2>事例② <span class="hl">電話代行・サポート</span></h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>τ³-Voice Telecom（顧客サポート模擬）で全GPT-Live版がAVMを上回ると報告</li>
+      <li>通話の横でAIがメモを取る「サイドパイロット」構想</li>
+      <li>コンタクトセンターの一次応答補助に企業の関心</li>
+    </ul></div>
+    <div class="card"><h3>現在地</h3><p style="font-size:15px;line-height:1.7;">ChatGPTアプリのGPT-Liveをそのまま「自社の電話番」にはまだできません。組み込みには既存のRealtime APIが必要です（第9章）。</p></div>
+  </div>
+  <span class="kick">事例②電話代行</span><span class="sno">18</span>
+</div>
+
+<!-- 19 事例③相談・カウンセリング -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">06</span><h2>事例③ <span class="hl">相談・カウンセリング的活用</span></h2></div>
+  <p class="lead" style="margin-top:10px;">悩みを声で吐き出し、AIに整理してもらう使い方が報告されています。テキストより感情が乗る分、「聞いてもらえた」感覚が強いという声もあります。</p>
+  <div class="card" style="max-width:900px;margin-top:24px;"><h3>話しかけ方の例</h3><p style="font-size:16px;line-height:1.7;">「今日あったことを整理したいから、聞き役になって。ときどき質問して」</p></div>
+  <span class="kick">事例③相談</span><span class="sno">19</span>
+</div>
+
+<!-- 20 事例④同時通訳 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">06</span><h2>事例④ <span class="hl">同時通訳</span></h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>公式デモ: 日本語の発話がリアルタイムに翻訳されていく映像</li>
+      <li>会議・旅行・多言語通話での「アンビエント通訳」</li>
+      <li>国際営業・海外フリーランスの非英語圏クライアントとの通話にも</li>
+    </ul></div>
+    <div class="card"><h3>技術的な裏付け</h3><p style="font-size:15px;line-height:1.7;">全二重構造により、相手の言葉を聞きながら訳した言葉を話す「同時通訳」が構造的に可能になったと公式が説明しています。</p></div>
+  </div>
+  <span class="kick">事例④同時通訳</span><span class="sno">20</span>
+</div>
+
+<!-- 21 事例グリッド -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">06</span><h2>その他の事例</h2></div>
+  <div class="feat">
+    <div class="f"><div class="ic">📰</div><b>割り込めるニュース</b><span>気になったら「待って、それ詳しく」</span></div>
+    <div class="f"><div class="ic">🏗️</div><b>現場ハンズフリー</b><span>歩きながら図面仕様を照会</span></div>
+    <div class="f"><div class="ic">🚗</div><b>運転中の口述</b><span>報告書を口述、移動時間が作業時間に</span></div>
+    <div class="f"><div class="ic">🗣️</div><b>語学・面接練習</b><span>相づちも割り込みもある本物の会話</span></div>
+  </div>
+  <span class="kick">事例グリッド</span><span class="sno">21</span>
+</div>
+
+<!-- 22 正直な現在地 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">07</span><h2>正直な現在地</h2></div>
+  <div class="note-box">
+    <h3>誇張なしで見る制限・不確定要素</h3>
+    <ul>
+      <li>「割り込みが多すぎて話しづらい」という声も一部にあります</li>
+      <li>日本語の流暢さについて、公式は非ネイティブなアクセントの差がありうると認めています</li>
+      <li>GPT-Live自体のAPIはまだ提供されていません（Coming soon）</li>
+      <li>ビデオ・画面共有との同時利用は初期リリースでは不可と報じられています</li>
+    </ul>
+  </div>
+  <span class="kick">正直な現在地</span><span class="sno">22</span>
+</div>
+
+<!-- 23 キーボードレスの未来 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">07</span><h2>キーボードレスの未来</h2></div>
+  <div class="ba">
+    <div class="panel before"><span class="tag">これまで：キーボード</span><ul>
+      <li>プロンプトを書き、結果を読み、また書く</li>
+      <li>「書く→読む」の往復が活用速度を決めていた</li>
+    </ul></div>
+    <div class="mid">→</div>
+    <div class="panel after"><span class="tag">これから：会話</span><ul>
+      <li>指示→確認→修正→実行が会話のテンポで回る</li>
+      <li>話し相手が、そのまま仕事の発注窓口になる</li>
+    </ul></div>
+  </div>
+  <span class="kick">キーボードレスの未来</span><span class="sno">23</span>
+</div>
+
+<!-- 24 未来の一日 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">07</span><h2>未来の一日（イメージ）</h2></div>
+  <div class="timeline">
+    <div class="row"><span class="tbadge">朝</span><div><b>歩きながら指示</b><p>「昨日の続きのリサーチをまとめて。午後の商談の想定問答も作って、終わったら電話して」</p></div></div>
+    <div class="row"><span class="tbadge">昼</span><div><b>AIから電話</b><p>進捗の電話が来て、口頭で修正を伝える</p></div></div>
+    <div class="row"><span class="tbadge">夕方</span><div><b>成果物が完成</b><p>キーボードに触れないまま、一日の仕事が形になっている</p></div></div>
+  </div>
+  <p class="ghost">GPT-Liveと既存のエージェント技術を素直につなぐと描ける未来像です</p>
+  <span class="kick">未来の一日</span><span class="sno">24</span>
+</div>
+
+<!-- 25 使い方4ステップ -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">08</span><h2>使い方（今日から試す）</h2></div>
+  <ul class="steps">
+    <li><span class="n">1</span>ChatGPTアプリを最新版に更新する（iOS/Android。Webはそのままで可）</li>
+    <li><span class="n">2</span>入力欄の右にあるVoiceボタンをタップする</li>
+    <li><span class="n">3</span>話しかける。途中で割り込んでいいし、「ちょっと待って」と言えば待ってくれる</li>
+    <li><span class="n">4</span>終わるときは「会話を終了して」と言うか、終了ボタンをタップ</li>
+  </ul>
+  <span class="kick">使い方</span><span class="sno">25</span>
+</div>
+
+<!-- 26 悩み→こう話す対応表 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">08</span><h2>悩み → こう話しかける</h2></div>
+  <ul class="map">
+    <li><span class="q">何ができるか知りたい</span><span class="ar">→</span><span class="a">「GPT-Liveになって何が変わったの？デモっぽく見せて」</span></li>
+    <li><span class="q">営業の練習がしたい</span><span class="ar">→</span><span class="a">「値下げ要求の厳しいお客さん役になって。遠慮なく割り込んで」</span></li>
+    <li><span class="q">通訳してほしい</span><span class="ar">→</span><span class="a">「英語と日本語の同時通訳者になって」</span></li>
+    <li><span class="q">相談に乗ってほしい</span><span class="ar">→</span><span class="a">「今日あったことを整理したいから聞き役になって」</span></li>
+    <li><span class="q">ニュースが聞きたい</span><span class="ar">→</span><span class="a">「今朝のAI関連ニュースを番組みたいに読み上げて」</span></li>
+  </ul>
+  <span class="kick">悩み→話し方</span><span class="sno">26</span>
+</div>
+
+<!-- 27 開発者向け現在地 -->
+
+<!-- 🎁 プレゼント訴求（QR） -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">🎁 プレゼント</p><h2 class="stitle">今日の使い方は、そのまま持ち帰れます</h2>
+  <div class="giftflex">
+    <div class="card" style="text-align:left;padding:26px 32px;">
+      <ul>
+        <li><b>ChatGPT Live活用術100選</b> — 話しかけるだけのフレーズ集（1本ずつコピー可）</li>
+        <li><b>おすすめ音声入力AI 5選</b> — キーボードレス化の相棒ツール</li>
+        <li><b>リアルタイム翻訳サイト</b> — APIキーを入れるだけの同時通訳（デプロイ済み）</li>
+      </ul>
+      <p style="font-size:13.5px;color:var(--ink-mid);margin-top:10px;">「悩み→こう話す」の完全版100本も収録。概要欄のリンク、またはQRコードから</p>
+    </div>
+    <div><div class="qrbox"></div><div class="qr-cap">スマホで読み取る 📱</div></div>
+  </div>
+  <span class="kick">プレゼント②</span><span class="sno"></span>
+</div>
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">09</span><h2>開発者向けの現在地</h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>GPT-LiveのAPIは未提供（公式に「Coming soon to the API」）</li>
+      <li>いま使えるのは Realtime API（gpt-realtime系モデル）</li>
+      <li>WebRTC/WebSocketで音声エージェント・電話統合(SIP)・翻訳が構築可能</li>
+    </ul></div>
+    <div class="card"><h3>翻訳サイトの技術根拠</h3><p style="font-size:15px;line-height:1.7;">プレゼントの「リアルタイム翻訳サイト」は、このRealtime APIをブラウザから直接叩く構成で作りました。</p></div>
+  </div>
+  <span class="kick">開発者向け</span><span class="sno">27</span>
+</div>
+
+<!-- 28 注意点まとめ -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">09</span><h2>知っておきたい注意点</h2></div>
+  <div class="note-box">
+    <h3>実務に使う前に</h3>
+    <ul>
+      <li>初期リリースではビデオ・画面共有との同時利用は不可と報じられています</li>
+      <li>ロールアウト初期には一部有料ユーザーに1日約1時間の利用制限があるとの報道も（流動的）</li>
+      <li>音声会話データは既定でAI学習にオプトアウト、30日保持・手動削除可</li>
+      <li>営業電話へのAI活用には特定商取引法など日本の法規制への配慮が必要</li>
+    </ul>
+  </div>
+  <span class="kick">注意点</span><span class="sno">28</span>
+</div>
+
+<!-- 29 まとめ -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">まとめ</p><h2 class="stitle">GPT-Liveが変えたのは<span class="hl">「声の仕事」の前提</span></h2>
+  <ul class="checks" style="max-width:820px;">
+    <li>全二重の会話で「AIと話している感じ」が薄れた</li>
+    <li>裏でGPT-5.5が働くから、雑談の顔をして中身は賢い</li>
+    <li>営業電話・電話代行・通訳という「声の仕事」が実用水準の入り口に立った</li>
+  </ul>
+  <span class="kick">まとめ</span><span class="sno">29</span>
+</div>
+
+<!-- 30 CTA -->
+<div class="slide"><span class="coin" style="top:auto;left:auto;bottom:-42px;right:-36px;"></span>
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <h2 class="stitle">もっと学ぶ</h2>
+  <p class="lead">全文（出典つき）と配布用の1枚資料は概要欄から</p>
+  <span class="pill">チャンネル登録でもっと学ぶ</span>
+  <div class="card" style="max-width:880px;margin-top:22px;display:flex;gap:30px;align-items:center;text-align:left;padding:24px 32px;">
+    <div style="flex:1;">
+      <h3 style="margin-bottom:10px;">🎁 今回プレゼントあります</h3>
+      <p style="font-size:15px;color:var(--ink-mid);line-height:1.7;">ChatGPT Live活用術100選／おすすめ音声入力AI5選／リアルタイム翻訳サイト（デプロイ済み） — 概要欄のリンク、またはQRコードから受け取れます</p>
+    </div>
+    <div><div class="qrbox" style="width:140px;height:140px;"></div><div class="qr-cap">スマホで読み取る 📱</div></div>
+  </div>
+  <p class="ghost" style="margin-top:14px;">出典: OpenAI公式ブログ／公式X（@OpenAI）／本資料は非公式まとめ</p>
+  <span class="kick">CTA・出典</span><span class="sno">30</span>
+</div>
+
+<div class="nav">
+  <button class="nav-btn" onclick="go(-1)">← 前へ</button>
+  <span class="counter" id="ctr">1 / 30</span>
+  <button class="nav-btn" onclick="go(1)">次へ →</button>
+</div>
+<script>
+  let cur=0;const slides=document.querySelectorAll('.slide');const total=slides.length;
+  function showSlide(n){slides.forEach(s=>s.classList.remove('active'));cur=((n%total)+total)%total;
+    slides[cur].classList.add('active');document.getElementById('ctr').textContent=(cur+1)+' / '+total;}
+  function go(d){showSlide(cur+d);}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();go(1);}
+    if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(-1);}});
+  document.querySelectorAll('.slide .sno').forEach((el,i)=>el.textContent=i+1);
+  showSlide(0);
+</script>
+</body>
+</html>
