@@ -50,13 +50,117 @@
   <div style="display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
     <div style="flex:1;min-width:260px;">
       <h1>🎁 プレゼントキット</h1>
-      <p class="sub" style="margin-bottom:8px;">「ChatGPT Live（GPT-Live）徹底解説」のプレゼント3点セットです。すべてこのページからコピー、またはダウンロードで受け取れます。</p>
+      <p class="sub" style="margin-bottom:8px;">「AI営業パイプライン徹底解説」のプレゼント3点セットです。すべてこのページからコピー、またはダウンロードで受け取れます。</p>
     </div>
     <div><div class="qrbox"></div><div class="qr-cap">スマホで開く 📱</div></div>
   </div>
 
   <div class="card">
     <span class="badge">キット 1/3</span>
+    <h2>AI商談エンジン ＋ Zoom/Meet連携サーバーコード</h2>
+    <p>マイクに向かって話すだけでAIが商談の会話をし、終了時に議事録・見積もりドラフトを自動生成する「AI商談エンジン」。単体ですぐ試せます。さらに、Recall.aiのMeeting Bot APIを使って実際のZoom・Google Meetの会議室にAIを参加させるための、実際に動くサーバーコード（Node.js／Express、起動確認済み）も収録しています。</p>
+    <div class="link-out">
+      <span class="cnt">🤝 今すぐ試せる</span>
+      <a class="btn" href="./ai-meeting.html" target="_blank" rel="noopener">AI商談エンジンを開く →</a>
+    </div>
+    <div class="link-out" style="margin-top:10px;">
+      <span class="cnt">🖥️ サーバーコード</span>
+      <a class="btn ghost" href="https://github.com/fuuuuuuma/gpt-live-guide-ja/tree/main/server" target="_blank" rel="noopener">server/ フォルダを見る →</a>
+    </div>
+    <p style="margin-top:8px;">Zoom/Meet本格連携ガイド（セットアップ手順・APIの使い方）:</p>
+    <pre class="prompt" id="k0"># 🎁 Zoom / Google Meet 本格連携ガイド — AI商談エンジンを実会議に参加させる
+
+[ai-meeting.html](https://fuuuuuuma.github.io/gpt-live-guide-ja/ai-meeting.html)（AI商談エンジン）を、実際のZoom・Google Meetの会議室にAIとして参加させるための、実際に動くサーバーコードとセットアップ手順です。`node index.js`で起動確認済みの本物のコードを配布しています（架空のサンプルではありません）。
+
+**受け取り方**: このファイルのコードブロックをコピーするか、GitHubの[server/](../server/)フォルダから直接ファイルを取得してください。
+
+## できること・できないこと（正直に）
+
+- ✅ `ai-meeting.html`単体（サーバー無し）: マイクでAIと直接商談の会話ができ、終了時に議事録・見積もりドラフトを生成できます。**今すぐ試せます**
+- ✅ この章の構成（サーバーあり）: Zoom・Google Meetの本物の会議室にAIをボットとして参加させ、人間の参加者とAIが実際に声で会話できます。会議終了後、サーバーに蓄積された文字起こしから議事録・見積もりを生成できます
+- ❌ 当方がRecall.aiのアカウントを作成したり、サーバーを代わりにデプロイすることはできません。ご自身でアカウント作成・APIキー取得・デプロイを行う必要があります
+- ❌ このサーバーコードはデモ用の最小構成です。文字起こしはプロセスのメモリ上に保存するため、**サーバーを再起動すると消えます**。本番運用ではデータベース（Vercel KV・Upstash Redis等）に置き換えてください
+
+## 全体の仕組み
+
+1. あなたが `POST /api/create-bot` を叩き、会議URL（Zoom/Google MeetのURL）を渡す
+2. サーバーがRecall.aiにボット参加をリクエストする。このときボットの「顔」として `ai-meeting.html?session=xxx&amp;server=...&amp;auto=1` のURLを指定する
+3. ボットが会議に参加すると、そのページが自動的に読み込まれ、サーバーから短命なOpenAIトークンを受け取ってAIとの音声接続を自動開始する（`auto=1`のため）
+4. 会議の音声はボットの仮想マイク経由でAIに届き、AIの声はそのままボットの出力として会議室に流れる
+5. Recall.aiはリアルタイムの文字起こしをWebhookでサーバーに送り続ける
+6. 会議が終わったら `POST /api/generate-minutes` を叩くと、蓄積された文字起こしから議事録・見積もりドラフトが生成される
+
+## セットアップ手順
+
+### 1. Recall.aiのアカウントを作る
+
+1. [recall.ai](https://www.recall.ai/) にアクセスし、アカウントを作成する（無料トライアルあり）
+2. ダッシュボードでAPIキーを発行する
+3. 料金は1時間あたり0.5ドル（ボットが会議に参加している時間の従量課金）です
+
+### 2. サーバーをデプロイする
+
+`server/`フォルダをRender・Fly.io・自前のVPSなど、Node.jsの常駐プロセスを動かせる環境にデプロイします（Vercelを使う場合は、通常のサーバーレス関数ではなくメモリ保持ができない点に注意し、下記「本番化のヒント」を参照してください）。
+
+```bash
+cd server
+npm install
+node index.js
+```
+
+環境変数を設定してください:
+
+| 変数名 | 内容 |
+|---|---|
+| `RECALL_API_KEY` | Recall.aiのAPIキー |
+| `OPENAI_API_KEY` | OpenAIの通常のAPIキー（サーバー側にのみ置く） |
+| `AI_MEETING_PAGE_URL` | `https://fuuuuuuma.github.io/gpt-live-guide-ja/ai-meeting.html`（またはご自身でホストしたコピー） |
+| `PUBLIC_BASE_URL` | デプロイ後のこのサーバー自身の外部URL（例: `https://your-server.onrender.com`） |
+| `PORT` | 任意（既定3000） |
+
+### 3. ボットを会議に参加させる
+
+```bash
+curl -X POST https://your-server.example.com/api/create-bot \
+  -H "Content-Type: application/json" \
+  -d '{
+    "meetingUrl": "https://zoom.us/j/xxxxxxxxxx",
+    "knowhow": "弊社は中小企業向けにAIコンサルティングを提供しています。...",
+    "company": "株式会社◯◯"
+  }'
+```
+
+レスポンスの`sessionId`を控えておきます。ボットが会議に参加し、AIが自動で会話を始めます。
+
+### 4. 商談終了後、議事録を生成する
+
+```bash
+curl -X POST https://your-server.example.com/api/generate-minutes \
+  -H "Content-Type: application/json" \
+  -d '{"sessionId": "さっき控えたsessionId"}'
+```
+
+## 本番化のヒント
+
+- **文字起こしの永続化**: 現状のコードはメモリ上の`Map`に保存しています。複数サーバーインスタンスやサーバーレス環境で使う場合は、Vercel KV・Upstash Redis・PostgreSQL等に置き換えてください
+- **Webhookの署名検証**: Recall.aiはワークスペースの検証シークレットを使った署名検証を推奨しています。このデモでは省略しているので、本番では追加してください
+- **APIキーの保護**: `RECALL_API_KEY`・`OPENAI_API_KEY`はどちらもサーバー側の環境変数にのみ置き、ブラウザ・ログ・リポジトリに残さないでください
+- **会議終了の検知**: このデモは手動で`/api/generate-minutes`を叩く前提です。Recall.aiのボットステータスWebhook（`bot.status_change`等）を使えば、会議終了を検知して自動的に議事録生成を走らせることもできます
+
+## 注意事項
+
+- Recall.aiの利用には料金がかかります（1時間あたり0.5ドル）
+- 会議を録音・AIに参加させることについて、参加者への事前の同意・明示が必要な場面が多いです。法的な扱いは国・業種によって異なるため、必ず確認してください
+- 生成される見積もりは必ず「ドラフト」として扱い、金額の最終確認は人間が行ってください
+</pre>
+    <div class="btns">
+      <button class="btn" onclick="copyPrompt('k0', this)">📋 ガイドをコピー</button>
+      <button class="btn ghost" onclick="downloadText('k0','zoom-meet-integration-guide.md', this)">⬇ ガイドをダウンロード（.md）</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="badge">キット 2/3</span>
     <h2>ChatGPT Live活用術100選</h2>
     <p>営業・商談、電話・受付、相談、通訳、学習、移動中など10カテゴリ×10本。ChatGPTの音声モードに「そのまま話しかけるだけ」のフレーズ集です。1本ずつ個別にコピーできる専用ページを用意しました。</p>
     <div class="link-out">
@@ -67,7 +171,7 @@
   </div>
 
   <div class="card">
-    <span class="badge">キット 2/3</span>
+    <span class="badge">キット 3/3</span>
     <h2>その他オススメ音声入力AI 5選</h2>
     <p>GPT-Liveと組み合わせて「キーボードレス」を実現する音声入力ツール5本。リンクからそのまま各サイトへ飛べます。価格は変動しやすいため、各サイトで最新情報を確認してください。</p>
     <div class="linkrow">
@@ -100,63 +204,11 @@
   </div>
 
   <div class="card">
-    <span class="badge">キット 3/3</span>
-    <h2>リアルタイム翻訳サイト（デプロイ済み）</h2>
-    <p>OpenAIのAPIキーを入れるだけで、マイクの音声を選んだ言語へ同時通訳して読み上げる公開Webサイトです。中間サーバーなし・ブラウザからOpenAIへ直接接続する作りで、いますぐ使えます。</p>
-    <div class="link-out">
-      <span class="cnt">🌐 デプロイ済み</span>
-      <a class="btn" href="./translate.html" target="_blank" rel="noopener">翻訳サイトを開く →</a>
-    </div>
-    <p style="margin-top:8px;">使い方ガイド（APIキーの取り方から手順まで）:</p>
-    <pre class="prompt" id="k3"># 🎁 リアルタイム翻訳サイトの使い方
-
-配布サイト: https://fuuuuuuma.github.io/gpt-live-guide-ja/translate.html
-
-## 何ができるか
-
-マイクに向かって話すと、選んだ言語にその場で通訳し、音声でも読み上げてくれるWebサイトです。OpenAIのAPIキー（自分の利用枠を使うための鍵）を入れるだけで使えます。
-
-このサイトは、OpenAIが提供している「Realtime API」という仕組みをブラウザから直接呼び出しています。間に中間サーバーを挟まない作りなので、話した内容や入力したAPIキーがこのサイトの運営者側に送られることはありません（通信はお使いのブラウザとOpenAIの間で直接行われます）。
-
-ただし、OpenAIの公式な推奨では、通常のAPIキーは本来サーバー側で使うものとされています。ブラウザにキーを貼り付けるこのサイトの使い方は、自分の端末で使う個人利用向けの簡易な形です。下の「注意事項」を読んでから使ってください。
-
-## 準備: OpenAIのAPIキーの取り方
-
-1. https://platform.openai.com にアクセスし、OpenAIのアカウントでログインします
-2. 左側のメニューから「API keys」を開きます
-3. 「Create new secret key」をクリックして新しいキーを発行します
-4. 表示されたキー（sk-から始まる文字列）をコピーして控えておきます
-5. Realtime APIの利用には従量課金の登録が必要です。あらかじめOpenAIアカウントの支払い設定（Billing）で登録を済ませておいてください
-
-## 使い方ステップ
-
-1. 配布サイト（https://fuuuuuuma.github.io/gpt-live-guide-ja/translate.html）を開く
-2. 控えておいたAPIキーを、キー入力欄に貼り付ける
-3. 翻訳したい方向（どの言語からどの言語へ通訳するか）を選ぶ
-4. 開始ボタンを押す
-5. マイクに向かって話す。話した内容が選んだ言語に通訳され、音声で読み上げられる
-
-## 注意事項
-
-- APIキーは他人に共有しないでください。キーが漏れると、自分のOpenAIアカウントの利用枠を他人に使われてしまう可能性があります
-- このサイト専用のキーを新しく発行し、OpenAIのBilling設定で利用上限（スペンドリミット）を設定してから使うことを強くおすすめします。使い終わったら platform.openai.com でそのキーを無効化（Revoke）すればより安心です
-- 共有PCや公開Wi-Fiでは使わないでください（「このブラウザに保存する」は自分専用の端末でのみ使う）
-- このサイトは運営者側のサーバーを持たず、キーは（保存を選んだ場合）お使いのブラウザ内にのみ保存されます
-- 利用にはOpenAIのAPI利用料がかかります。事前にOpenAI側の料金体系を確認してください
-- 周囲が騒がしい場所では、音声の聞き取り精度が落ちることがあります。できるだけ静かな環境での利用をおすすめします
-</pre>
-    <div class="btns">
-      <button class="btn" onclick="copyPrompt('k3', this)">📋 ガイドをコピー</button>
-      <button class="btn ghost" onclick="downloadText('k3','translator-guide.md', this)">⬇ ガイドをダウンロード（.md）</button>
-    </div>
-  </div>
-
-  <div class="card">
     <h2>受け取り方・使い方</h2>
     <ol style="font-size:14.5px;padding-left:22px;">
       <li>各キットのボタンからコピー、またはダウンロードしてください（GitHubの <a href="https://github.com/fuuuuuuma/gpt-live-guide-ja/tree/main/kit" target="_blank" rel="noopener">kit/ フォルダ</a>からも受け取れます）</li>
       <li>活用術100選は、フレーズをコピーしてChatGPTの音声モードで声に出して読むだけです</li>
-      <li>翻訳サイトはOpenAIのAPIキー（従量課金）が必要です。ガイドの手順で発行してください</li>
+      <li>AI商談エンジンはOpenAIのAPIキー（従量課金）が必要です。Zoom/Meet本格連携にはRecall.aiのアカウントとサーバーのデプロイが別途必要です（ガイド参照）</li>
     </ol>
     <div class="note"><b>ご注意:</b> AIの出力は内容を確認してから使ってください。APIキーは他人と共有しないでください。</div>
   </div>

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ChatGPT Live（GPT-Live）徹底解説｜AIエージェント・Kawaru スライド</title>
+<title>メールが来たら受注まで全部AI｜ChatGPT Liveで作るAI営業パイプライン徹底解説｜AIエージェント・Kawaru スライド</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   /* ===== セマンティックトークン（テーマはこの :root 値だけ差し替え）===== */
@@ -195,10 +195,10 @@
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
   <div class="dots tl"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
   <p class="eyebrow">AI を使いこなす</p>
-  <h1 style="font-size:52px;">ChatGPT Live<br><span class="hl">（GPT-Live）</span>徹底解説</h1>
+  <h1 style="font-size:46px;">メールが来たら、<br>あとは<span class="hl">全部AI</span>がやってくれる</h1>
   <div class="sep"></div>
-  <p class="lead" style="font-weight:700;">「声の仕事」がAIに置き換わる — 営業・電話代行はその入り口</p>
-  <span class="yen-chip" style="margin-top:20px;">2026年7月10日</span>
+  <p class="lead" style="font-weight:700;">ChatGPT Liveで作るAI営業パイプライン徹底解説</p>
+  <span class="yen-chip" style="margin-top:20px;">2026年7月11日</span>
   <span class="kick">AIエージェント/Kawaru</span><span class="sno">1</span>
 </div>
 
@@ -207,14 +207,14 @@
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
   <p class="eyebrow">CONTENTS</p><h2 class="stitle">この資料の流れ</h2>
   <ul class="toc">
-    <li><span>1</span>発表の瞬間 — 公式Xスレッドを読む</li>
-    <li><span>2</span>GPT-Liveとは何か</li>
-    <li><span>3</span>何が新しいのか — 3本柱</li>
-    <li><span>4</span>数字で見るGPT-Live</li>
-    <li><span>5</span>「声の仕事」が置き換わる構造</li>
-    <li><span>6</span>事例集 — 営業・電話代行・通訳</li>
-    <li><span>7</span>キーボードを叩かない未来</li>
-    <li><span>8</span>使い方・注意点・まとめ</li>
+    <li><span>1</span>全体像 — AI営業パイプライン8ステップ</li>
+    <li><span>2</span>ステップ①②③④ — 商品設計〜提案資料</li>
+    <li><span>3</span>なぜ声のAIが商談まで担えるのか（GPT-Live）</li>
+    <li><span>4</span>商談という仕事の4分解とベンチ数値</li>
+    <li><span>5</span>ステップ⑥⑦⑧ — 商談後処理〜受注</li>
+    <li><span>6</span>実際に動くデモ — AI商談エンジン</li>
+    <li><span>7</span>本格連携 — Zoom/Google Meetへの接続</li>
+    <li><span>8</span>現在地・注意点・使い方・まとめ</li>
   </ul>
   <span class="kick">目次</span><span class="sno">2</span>
 </div>
@@ -224,17 +224,106 @@
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
   <p class="eyebrow">まず3行で</p><h2 class="stitle">結論</h2>
   <div class="tldr">
-    <div class="t"><div class="k">POINT 1</div><p>OpenAIが2026年7月8日、聞きながら同時に話せる「フルデュプレックス（全二重）」音声モデル GPT-Live を発表</p></div>
-    <div class="t"><div class="k">POINT 2</div><p>賢さも別物。難しい質問は裏でGPT-5.5に委譲され、GPQAは45.3%から84.2%へ</p></div>
-    <div class="t"><div class="k">POINT 3</div><p>「声でやりとりする仕事」——営業電話・電話代行・相談・通訳——が実用レベルでAIに置き換わる時代に入った</p></div>
+    <div class="t"><div class="k">POINT 1</div><p>OpenAIが2026年7月8日に発表した音声モデル「GPT-Live」は、聞きながら同時に話せる「フルデュプレックス」で会話の自然さも賢さも大きく引き上げられた</p></div>
+    <div class="t"><div class="k">POINT 2</div><p>この進化により、「問い合わせ対応→商談→受注」という営業の一連の流れを、メール一次対応からオンライン商談まで丸ごとAIに任せる設計が現実的になった</p></div>
+    <div class="t"><div class="k">POINT 3</div><p>本資料ではその全体設計（8ステップ）を解説しつつ、実際に声で商談できるAIエンジンのデモと、Zoom/Google Meetの実会議にAIを参加させる本物のサーバーコードを配布する</p></div>
   </div>
   <span class="kick">TL;DR</span><span class="sno">3</span>
 </div>
 
-<!-- 04 発表の瞬間 -->
+<!-- 04 全体像① 8ステップパイプライン図解 -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">01</span><h2>発表の瞬間 — 公式Xより</h2></div>
+  <div class="head-row"><span class="secno">01</span><h2>全体像 — AI営業パイプライン8ステップ</h2></div>
+  <div class="flow" style="margin-bottom:14px;">
+    <div class="step"><div class="t">①商品設計</div><div class="d">AIとの壁打ちで商品を固める</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">②フロント制作</div><div class="d">集客用LP・サイトを作る</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">③メール一次対応</div><div class="d">検知・分類・返信・アポ提案</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">④提案資料生成</div><div class="d">ヒアリングから資料を自動化</div></div>
+  </div>
+  <div class="flow">
+    <div class="step"><div class="t">⑤オンライン商談</div><div class="d">AI（GPT-Live）が声で担当</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">⑥商談後処理</div><div class="d">議事録・見積書を自動生成</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">⑦フォロー対応</div><div class="d">条件調整メールを継続</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">⑧受注</div><div class="d">最終判断は人間が行う</div></div>
+  </div>
+  <span class="kick">全体像①</span><span class="sno">4</span>
+</div>
+
+<!-- 05 全体像② 正直な温度差 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">01</span><h2>すべてが同じ完成度ではありません</h2></div>
+  <div class="feat">
+    <div class="f"><div class="ic">🛠️</div><b>実務レベル</b><span>①②④ 商品設計・フロント・提案資料生成</span></div>
+    <div class="f"><div class="ic">🧩</div><b>概念設計</b><span>③⑦ メール一次対応・フォロー対応</span></div>
+    <div class="f"><div class="ic">🎙️</div><b>今回実現</b><span>⑤⑥ オンライン商談・商談後処理</span></div>
+    <div class="f"><div class="ic">🤝</div><b>人間の判断</b><span>⑧ 受注（契約・発注の確定）</span></div>
+  </div>
+  <p class="lead" style="margin-top:22px;">③⑦は本資料では概念設計として解説し、特定のメールアドレスへの実接続はしていません。⑤⑥はGPT-Liveの登場でようやく現実的になった部分で、実際に動くものまで用意しています。この温度差を正直に見せながら進めます。</p>
+  <span class="kick">全体像②</span><span class="sno">5</span>
+</div>
+
+<!-- 06 ステップ①② 商品設計とフロント -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">02</span><h2>ステップ①② 商品設計とフロント</h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div class="card"><h3>① 商品設計</h3><p style="font-size:16px;line-height:1.8;">ChatGPTやClaudeに壁打ち相手になってもらい、「どんな悩みを持つ人に」「何を」「いくらで」提供するかを固める。AI研修・AIコンサルのようなサービス業は在庫を持たず、壁打ちだけで骨子まで作れる。</p></div>
+    <div class="card"><h3>② フロント制作</h3><p style="font-size:16px;line-height:1.8;">Claude CodeやCodexのようなAIコーディングツールに、商品とトーンを伝えるだけでLP・Webサイトが作れる段階。問い合わせフォームから次のステップへの導線を作っておくのがポイント。</p></div>
+  </div>
+  <p class="ghost">すでにAI活用の定番領域。本資料では深追いせず、次の「メールが届いてから」に紙面を割きます</p>
+  <span class="kick">ステップ①②</span><span class="sno">6</span>
+</div>
+
+<!-- 07 ステップ③ メール一次対応 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">02</span><h2>ステップ③ メールの一次対応</h2></div>
+  <ul class="steps">
+    <li><span class="n">1</span>受信の検知: Gmail APIのプッシュ通知、またはZapier・Makeのノーコード連携</li>
+    <li><span class="n">2</span>内容の分類: 受信メール本文をLLMに渡し、新規問い合わせ・既存案件・クレーム等を分類</li>
+    <li><span class="n">3</span>返信文の生成: 商品情報や過去のやり取りを踏まえた返信文をLLMに下書きさせる</li>
+    <li><span class="n">4</span>アポの提案: Google Calendar APIで空き時間を取得し候補日時を自動で差し込む</li>
+  </ul>
+  <p class="ghost" style="max-width:1000px;">本資料ではこの部分をアーキテクチャとして解説するにとどめ、実際の特定のメールアドレスに接続する自動化は行っていません。実際に組む場合は「下書きまで自動生成し、送信は人間が確認してから押す」半自動運用から始めることを推奨します</p>
+  <span class="kick">ステップ③</span><span class="sno">7</span>
+</div>
+
+<!-- 08 ステップ④ 提案資料自動生成 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">02</span><h2>ステップ④ 提案資料の自動生成</h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>ヒアリングメモや問い合わせ内容から資料下書きを自動生成（Gamma等）</li>
+      <li>ゼロから作らせず「素材を渡して整形させる」考え方が重要</li>
+      <li>Google Slides API等でテンプレートに差し込む方式も一般的</li>
+    </ul></div>
+    <div class="card"><h3>ポイント</h3><p style="font-size:16px;line-height:1.8;">ヒアリング内容・商品資料・過去の類似提案書をAIに渡し、その商談専用に組み替えてもらう。人間が最後に見て微調整すれば、資料作成の時間は大幅に圧縮できる。</p></div>
+  </div>
+  <span class="kick">ステップ④</span><span class="sno">8</span>
+</div>
+
+<!-- 09 章扉: なぜ声のAIが商談まで担えるのか -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">ここが本資料の核心</p><h2 class="stitle"><span class="secno">03</span>なぜ声のAIが<br>商談まで担えるのか</h2>
+  <p class="lead">「AIが商談を担当する」と聞くと突飛に聞こえるかもしれません。その土台になっているのが、OpenAIが2026年7月8日に発表した音声モデル「GPT-Live」です。</p>
+  <div class="card" style="max-width:900px;margin-top:24px;"><h3>ここから見ていくこと</h3><p style="font-size:16px;line-height:1.8;">GPT-Liveで何が変わったのか、そしてその変化が「商談という仕事」のどこを直撃するのかを、公式発表とベンチマーク数値で確認していきます。</p></div>
+  <span class="kick">章扉③</span><span class="sno">9</span>
+</div>
+
+<!-- 10 公式X発表カード -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">03</span><h2>発表の瞬間 — 公式Xより</h2></div>
   <div class="xcard">
     <div class="xhead">
       <div class="xavatar">✳</div>
@@ -244,13 +333,13 @@
     <div class="xtrans">GPT-Liveを発表します。人間とAIの自然な対話のための、新世代の音声モデル群です。本日からChatGPTに展開開始。この動画は音を出して見てください。</div>
     <div class="xmeta"><span>👍 <b>24,139</b></span><span>👁 表示 <b>734万回</b></span></div>
   </div>
-  <span class="kick">発表の瞬間</span><span class="sno">4</span>
+  <span class="kick">公式X発表</span><span class="sno">10</span>
 </div>
 
-<!-- 05 GPT-Liveとは -->
+<!-- 11 GPT-Liveとは -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">02</span><h2>GPT-Liveとは？</h2></div>
+  <div class="head-row"><span class="secno">03</span><h2>GPT-Liveとは？</h2></div>
   <div class="cols c2" style="align-items:center;">
     <div><p style="font-size:19px;line-height:1.8;font-weight:600;">OpenAIが発表した<span class="hl">新世代の音声モデル群</span>。ChatGPTの音声モード（Voice）として提供され、有料標準モデルは<span class="hl">GPT-Live-1</span>、無料標準モデルは<span class="hl">GPT-Live-1 mini</span>と呼ばれます。</p></div>
     <div><ul class="checks">
@@ -260,13 +349,13 @@
       <li>無料ユーザーへの展開は進行中</li>
     </ul></div>
   </div>
-  <span class="kick">GPT-Liveとは</span><span class="sno">5</span>
+  <span class="kick">GPT-Liveとは</span><span class="sno">11</span>
 </div>
 
-<!-- 06 Before/After -->
+<!-- 12 Before/After -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">02</span><h2>Advanced Voice Mode → GPT-Live</h2></div>
+  <div class="head-row"><span class="secno">03</span><h2>Advanced Voice Mode → GPT-Live</h2></div>
   <div class="ba">
     <div class="panel before"><span class="tag">Before：Advanced Voice Mode</span><ul>
       <li>ターン制。相手が話し終わるのを待つ</li>
@@ -280,13 +369,13 @@
       <li>時間感覚を保ち、ライブ翻訳も可能</li>
     </ul></div>
   </div>
-  <span class="kick">Before/After</span><span class="sno">6</span>
+  <span class="kick">Before/After</span><span class="sno">12</span>
 </div>
 
-<!-- 07 全体像フロー -->
+<!-- 13 GPT-Liveの応答フロー -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">02</span><h2>GPT-Liveの全体像</h2></div>
+  <div class="head-row"><span class="secno">03</span><h2>GPT-Liveの応答フロー</h2></div>
   <div class="flow">
     <div class="step"><div class="t">① 話す</div><div class="d">こちらは自由に話しかける</div></div>
     <div class="arrow">→</div>
@@ -297,67 +386,10 @@
     <div class="step"><div class="t">④ 会話に折込み</div><div class="d">結果を自然に会話へ戻す</div></div>
   </div>
   <p class="ghost">出典: OpenAI公式Xスレッド（2026年7月8日）</p>
-  <span class="kick">全体像フロー</span><span class="sno">7</span>
+  <span class="kick">応答フロー</span><span class="sno">13</span>
 </div>
 
-<!-- 08 3本柱の提示 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <p class="eyebrow">公式スレッドの主張</p><h2 class="stitle"><span class="secno">03</span>何が新しいのか — 3つの柱</h2>
-  <div class="cols c3">
-    <div class="card center"><div class="pin">1</div><h3>フルデュプレックス</h3><p>聞くと話すを同時に行う全二重構造</p></div>
-    <div class="card center accent"><div class="pin">2</div><h3>人格と会話の質</h3><p>自然で楽しい、はっきりした人格</p></div>
-    <div class="card center"><div class="pin">3</div><h3>推論委譲</h3><p>難題は裏でフロンティアモデルへ</p></div>
-  </div>
-  <span class="kick">3本柱</span><span class="sno">8</span>
-</div>
-
-<!-- 09 柱①フルデュプレックス -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">03</span><h2>柱① <span class="hl">フルデュプレックス</span></h2></div>
-  <div class="cols c2" style="align-items:center;">
-    <div><ul class="checks">
-      <li>毎秒何度も「話す/聞く/黙る/割込む/ツールを呼ぶ」を判断（Impress報道）</li>
-      <li>相づち・割り込み・沈黙の保持が自然</li>
-      <li>より正確な時間感覚を維持</li>
-      <li>この構造がライブ翻訳も可能にする</li>
-    </ul></div>
-    <div class="card"><h3>公式の説明</h3><p style="font-size:16px;line-height:1.7;">"GPT-Live is built on a full-duplex architecture, meaning it can listen and speak at the same time."</p></div>
-  </div>
-  <span class="kick">柱①フルデュプレックス</span><span class="sno">9</span>
-</div>
-
-<!-- 10 柱②人格 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">03</span><h2>柱② <span class="hl">人格と会話の質</span></h2></div>
-  <div class="stats" style="margin-bottom:16px;">
-    <div class="stat"><div class="n">75.7<small>%</small></div><div class="u">GPT-Live-1がAVMより選好された割合</div></div>
-    <div class="stat"><div class="n">69.2<small>%</small></div><div class="u">無料版 mini でも選好された割合</div></div>
-    <div class="stat"><div class="n">9<small>種</small></div><div class="u">リマスターされた音声</div></div>
-  </div>
-  <p class="lead">Arbor, Breeze, Cove, Ember, Juniper, Maple, Sol, Spruce, Vale の9音声を調整（報道）</p>
-  <span class="kick">柱②人格</span><span class="sno">10</span>
-</div>
-
-<!-- 11 柱③推論委譲 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">03</span><h2>柱③ <span class="hl">推論委譲</span></h2></div>
-  <div class="cols c2" style="align-items:center;">
-    <div><ul class="checks">
-      <li>会話のテンポはGPT-Liveが守り続ける</li>
-      <li>検索・深い推論・複雑な作業はGPT-5.5等へ裏で委譲</li>
-      <li>結果を会話に自然に折り込んで返す</li>
-      <li>推論の深さは Instant / Medium / High の3段階</li>
-    </ul></div>
-    <div class="card"><h3>視覚カード</h3><p style="font-size:16px;line-height:1.7;">天気・株価・スポーツなどは音声と並行して画面にも表示。声だけでは伝わりにくい情報を補います。</p></div>
-  </div>
-  <span class="kick">柱③推論委譲</span><span class="sno">11</span>
-</div>
-
-<!-- 12 公式スレッド再現その2 -->
+<!-- 14 公式スレッドもう2枚 -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
   <div class="head-row"><span class="secno">03</span><h2>公式スレッドより — もう2枚</h2></div>
@@ -373,10 +405,10 @@
       <div class="xtrans" style="font-size:13px;">より自然なやりとり、正確な時間感覚、そしてライブ翻訳までを可能にする。</div>
     </div>
   </div>
-  <span class="kick">公式スレッド②</span><span class="sno">12</span>
+  <span class="kick">公式スレッド②</span><span class="sno">14</span>
 </div>
 
-<!-- 13 ベンチ数値スタット -->
+<!-- 15 ベンチ数値スタット -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
   <div class="head-row"><span class="secno">04</span><h2>数字で見るGPT-Live</h2></div>
@@ -386,10 +418,10 @@
     <div class="stat"><div class="n">75.7<small>%</small></div><div class="u">会話選好（対AVM）</div></div>
   </div>
   <p class="ghost">出典: OpenAI公式ブログの数値（各メディア報道経由）</p>
-  <span class="kick">数字で見る</span><span class="sno">13</span>
+  <span class="kick">数字で見る</span><span class="sno">15</span>
 </div>
 
-<!-- 14 ベンチ比較表 -->
+<!-- 16 ベンチ比較表 -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
   <div class="head-row"><span class="secno">04</span><h2>ベンチマーク比較</h2></div>
@@ -401,21 +433,119 @@
     <tr><td>τ³-Voice Telecom（顧客サポート模擬）</td><td class="no">—</td><td class="yes">全GPT-Live版がAVMを上回る</td></tr>
     </tbody></table>
   <p class="ghost">出典: OpenAI公式ブログの数値（各メディア報道経由）</p>
-  <span class="kick">ベンチ比較</span><span class="sno">14</span>
+  <span class="kick">ベンチ比較</span><span class="sno">16</span>
 </div>
 
-<!-- 15 プラン表 -->
-
-<!-- 🎁 プレゼント訴求（QR） -->
+<!-- 17 商談という仕事の4分解 -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <p class="eyebrow">🎁 プレゼント</p><h2 class="stitle">この賢さ、今日から試せるキットがあります</h2>
+  <div class="head-row"><span class="secno">04</span><h2>商談という仕事の4分解</h2></div>
+  <div class="feat">
+    <div class="f"><div class="ic">①</div><b>聞く</b><span>遮らず要点を掴む — 全二重が直撃</span></div>
+    <div class="f"><div class="ic">②</div><b>即応する</b><span>不自然な間を作らない — 全二重が直撃</span></div>
+    <div class="f"><div class="ic">③</div><b>調べる</b><span>その場で確認し正確に答える — 推論委譲が直撃</span></div>
+    <div class="f"><div class="ic">④</div><b>記録する</b><span>整理し次のアクションへ — 議事録生成につながる</span></div>
+  </div>
+  <p class="lead" style="margin-top:18px;">商談という仕事を構成する要素が、GPT-Liveの登場でひとつのモデルの中にほぼ揃いました</p>
+  <span class="kick">商談の4分解</span><span class="sno">17</span>
+</div>
+
+<!-- 18 ステップ⑥ 商談後処理 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">05</span><h2>ステップ⑥ 商談後の自動処理</h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>文字起こし: 商談中の音声をテキスト化</li>
+      <li>要約・整形: 議事録（日時・参加者・議題・決定事項・次のアクション）に整形</li>
+      <li>見積書のドラフト: 合意内容をもとに項目・金額案を生成</li>
+    </ul></div>
+    <div class="card"><h3>今回組み込んだ機能</h3><p style="font-size:16px;line-height:1.8;">第20章のAI商談エンジンには「商談終了→議事録・見積もり自動生成」を実際に組み込みました。見積書はあくまでドラフトで、金額の最終確認は必ず人間が行います。</p></div>
+  </div>
+  <span class="kick">ステップ⑥</span><span class="sno">18</span>
+</div>
+
+<!-- 19 ステップ⑦⑧ フォロー〜受注 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">05</span><h2>ステップ⑦⑧ フォローメールから受注へ</h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div class="card"><h3>⑦ フォロー対応</h3><p style="font-size:16px;line-height:1.8;">見積送付後の条件調整・追加質問には、ステップ③と同じ設計思想（受信内容をLLMに分類・要約させ、返信文の下書きを作らせる）が使える。値引き交渉など繊細な判断は下書きAI・送信判断は人間で運用する。</p></div>
+    <div class="card"><h3>⑧ 受注</h3><p style="font-size:16px;line-height:1.8;">契約・発注の確定は現時点で人間の最終判断に委ねるべき領域。提案資料・商談の記録・見積もりというAIが用意した情報をもとに、人間が意思決定する。</p></div>
+  </div>
+  <span class="kick">ステップ⑦⑧</span><span class="sno">19</span>
+</div>
+
+<!-- 20 実際に動くデモ -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">06</span><h2>【実際に動くデモ】AI商談エンジン</h2></div>
+  <ul class="steps">
+    <li><span class="n">1</span>自社のノウハウ・トークスクリプトを注入できる — 商品・トーン・大事にすることをテキストで入力</li>
+    <li><span class="n">2</span>音声で商談の会話ができる — OpenAI Realtime API（GPT-Liveと同じ全二重の仕組み）で相づち・割り込みも自然</li>
+    <li><span class="n">3</span>商談終了と同時に議事録・見積もりドラフトを自動生成</li>
+  </ul>
+  <p class="ghost">ai-meeting.htmlは単体で今すぐ動くデモです（OpenAIのAPIキーのみで完結、サーバー不要）</p>
+  <span class="kick">AI商談エンジン</span><span class="sno">20</span>
+</div>
+
+<!-- 21 本格連携① Recall.ai概要 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">07</span><h2>【本格連携】Recall.aiのMeeting Bot API</h2></div>
+  <div class="cols c2" style="align-items:center;">
+    <div><ul class="checks">
+      <li>Zoom・Google Meet・Microsoft Teams等にボットとして参加</li>
+      <li>音声・映像・文字起こしをリアルタイムで取得</li>
+      <li>料金は1時間あたり0.5ドル（従量課金）。無料トライアルあり</li>
+    </ul></div>
+    <div class="prompt">POST <span class="c">/api/v1/bot/</span><br><span class="cm">{ "meeting_url": "..." }</span></div>
+  </div>
+  <span class="kick">本格連携①</span><span class="sno">21</span>
+</div>
+
+<!-- 22 本格連携② webpage-as-camera仕組み -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">07</span><h2>【本格連携】ボットの顔＝Webページ</h2></div>
+  <div class="flow" style="margin-bottom:18px;">
+    <div class="step"><div class="t">① AI商談エンジン</div><div class="d">ai-meeting.htmlのページ</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">② Recall.aiボット</div><div class="d">このURLを顔・声として読込む</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">③ Zoom/Meet会議室</div><div class="d">AIの声・映像がそのまま流れる</div></div>
+  </div>
+  <p class="lead">ボット作成時に <span class="hl">output_media.camera.kind: "webpage"</span> とURLを指定すると、そのページの映像と音声がそのままボットのカメラ・マイク出力として会議に流れます</p>
+  <span class="kick">本格連携②</span><span class="sno">22</span>
+</div>
+
+<!-- 23 本格連携③ サーバーコード -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">07</span><h2>【本格連携】配布するサーバーコード</h2></div>
+  <ul class="checks" style="max-width:1040px;">
+    <li>POST /api/create-bot — 会議URLを受け取りRecall.aiにボット作成をリクエスト</li>
+    <li>POST /api/recall-webhook — リアルタイム文字起こしを商談セッションごとに保存</li>
+    <li>GET /api/realtime-token — OpenAIキーを渡さず短命なclient_secretだけを発行</li>
+    <li>POST /api/generate-minutes — 保存した文字起こしから議事録・見積もりを生成</li>
+  </ul>
+  <div class="note-box" style="margin-top:16px;">
+    <h3>誠実な境界線</h3>
+    <ul><li>静的なWebページ（ai-meeting.html）単体では、実際にZoom・Google Meetの会議へAIを参加させることはできません。Recall.aiのAPIキーを使うサーバー側の処理が別途必要です</li></ul>
+  </div>
+  <span class="kick">本格連携③</span><span class="sno">23</span>
+</div>
+
+<!-- 🎁 プレゼント訴求① -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">🎁 プレゼント</p><h2 class="stitle">この仕組み、丸ごと持ち帰れます</h2>
   <div class="giftflex">
     <div class="card" style="text-align:left;padding:26px 32px;">
       <ul>
+        <li><b>AI商談エンジン＋Zoom/Meet連携サーバーコード</b> — 声で商談できるデモの使い方と、実会議に接続する実際のサーバーコード</li>
         <li><b>ChatGPT Live活用術100選</b> — 話しかけるだけのフレーズ集（1本ずつコピー可）</li>
         <li><b>おすすめ音声入力AI 5選</b> — キーボードレス化の相棒ツール</li>
-        <li><b>リアルタイム翻訳サイト</b> — APIキーを入れるだけの同時通訳（デプロイ済み）</li>
       </ul>
       <p style="font-size:13.5px;color:var(--ink-mid);margin-top:10px;">受け取りは概要欄のリンク、またはQRコードから</p>
     </div>
@@ -423,235 +553,80 @@
   </div>
   <span class="kick">プレゼント①</span><span class="sno"></span>
 </div>
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">04</span><h2>プランと標準モデル</h2></div>
-  <div class="price">
-    <div class="p"><div class="name">Free</div><div class="amt">$0</div><ul><li>GPT-Live-1 mini</li><li>まず試すのに最適</li></ul></div>
-    <div class="p best"><div class="name">Go</div><div class="amt">$8<small>/月</small></div><ul><li>GPT-Live-1</li><li>個人利用に</li></ul></div>
-    <div class="p"><div class="name">Plus</div><div class="amt">$20<small>/月</small></div><ul><li>GPT-Live-1</li><li>本格利用に</li></ul></div>
-  </div>
-  <p class="ghost">Pro（$200/月）はGPT-Live-1で利用上限が大きい。Business/Enterprise/Eduは初期非対応と報じられています</p>
-  <span class="kick">プラン</span><span class="sno">15</span>
-</div>
 
-<!-- 16 声の仕事の構造分解 -->
+<!-- 24 コラム -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">05</span><h2>「声の仕事」の構造分解</h2></div>
+  <div class="head-row"><span class="secno">08</span><h2>コラム — X上の音声AI活用事例</h2></div>
   <div class="feat">
-    <div class="f"><div class="ic">①</div><b>聞く</b><span>フルデュプレックスが直撃</span></div>
-    <div class="f"><div class="ic">②</div><b>即応する</b><span>フルデュプレックスが直撃</span></div>
-    <div class="f"><div class="ic">③</div><b>調べる</b><span>推論委譲とWeb検索が直撃</span></div>
-    <div class="f"><div class="ic">④</div><b>記録する</b><span>テキスト化と要約が直撃</span></div>
+    <div class="f"><div class="ic">🤝</div><b>営業の壁打ち</b><span>価格交渉・反論処理を声でロールプレイ</span></div>
+    <div class="f"><div class="ic">🌐</div><b>国際商談の同時通訳</b><span>非英語圏クライアントとの通話をリアルタイム翻訳</span></div>
+    <div class="f"><div class="ic">📞</div><b>コールド架電の実験</b><span>従来モードで「2〜3%の商談化率」という報告</span></div>
+    <div class="f"><div class="ic">🚗</div><b>現場・移動中の活用</b><span>図面照会や運転中の口述メモ</span></div>
   </div>
-  <p class="lead" style="margin-top:18px;">営業電話・電話代行・受付・サポート窓口——「電話の仕事」の構成要素が今回の発表で全部そろいました</p>
-  <span class="kick">構造分解</span><span class="sno">16</span>
+  <p class="ghost">個人の報告であり公式統計ではない点に注意して読んでください</p>
+  <span class="kick">コラム</span><span class="sno">24</span>
 </div>
 
-<!-- 17 事例①営業電話 -->
+<!-- 25 正直な現在地① GPT-Live自体の制限 -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">06</span><h2>事例① <span class="hl">営業電話</span></h2></div>
-  <div class="cols c2" style="align-items:center;">
-    <div><ul class="checks">
-      <li>価格交渉・反論処理を声でロールプレイ</li>
-      <li>AIが顧客役として反問し、終了後に口頭でフィードバック</li>
-      <li>「間」や「言い淀み」まで練習できる</li>
-    </ul></div>
-    <div class="card"><h3>X上の報告</h3><p style="font-size:15px;line-height:1.7;">従来の音声モードでのコールド架電で「2〜3%の商談化率だった」という報告が見られました。個人の報告であり、公式統計ではありません。</p></div>
-  </div>
-  <span class="kick">事例①営業電話</span><span class="sno">17</span>
-</div>
-
-<!-- 18 事例②電話代行・サポート -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">06</span><h2>事例② <span class="hl">電話代行・サポート</span></h2></div>
-  <div class="cols c2" style="align-items:center;">
-    <div><ul class="checks">
-      <li>τ³-Voice Telecom（顧客サポート模擬）で全GPT-Live版がAVMを上回ると報告</li>
-      <li>通話の横でAIがメモを取る「サイドパイロット」構想</li>
-      <li>コンタクトセンターの一次応答補助に企業の関心</li>
-    </ul></div>
-    <div class="card"><h3>現在地</h3><p style="font-size:15px;line-height:1.7;">ChatGPTアプリのGPT-Liveをそのまま「自社の電話番」にはまだできません。組み込みには既存のRealtime APIが必要です（第9章）。</p></div>
-  </div>
-  <span class="kick">事例②電話代行</span><span class="sno">18</span>
-</div>
-
-<!-- 19 事例③相談・カウンセリング -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">06</span><h2>事例③ <span class="hl">相談・カウンセリング的活用</span></h2></div>
-  <p class="lead" style="margin-top:10px;">悩みを声で吐き出し、AIに整理してもらう使い方が報告されています。テキストより感情が乗る分、「聞いてもらえた」感覚が強いという声もあります。</p>
-  <div class="card" style="max-width:900px;margin-top:24px;"><h3>話しかけ方の例</h3><p style="font-size:16px;line-height:1.7;">「今日あったことを整理したいから、聞き役になって。ときどき質問して」</p></div>
-  <span class="kick">事例③相談</span><span class="sno">19</span>
-</div>
-
-<!-- 20 事例④同時通訳 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">06</span><h2>事例④ <span class="hl">同時通訳</span></h2></div>
-  <div class="cols c2" style="align-items:center;">
-    <div><ul class="checks">
-      <li>公式デモ: 日本語の発話がリアルタイムに翻訳されていく映像</li>
-      <li>会議・旅行・多言語通話での「アンビエント通訳」</li>
-      <li>国際営業・海外フリーランスの非英語圏クライアントとの通話にも</li>
-    </ul></div>
-    <div class="card"><h3>技術的な裏付け</h3><p style="font-size:15px;line-height:1.7;">全二重構造により、相手の言葉を聞きながら訳した言葉を話す「同時通訳」が構造的に可能になったと公式が説明しています。</p></div>
-  </div>
-  <span class="kick">事例④同時通訳</span><span class="sno">20</span>
-</div>
-
-<!-- 21 事例グリッド -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">06</span><h2>その他の事例</h2></div>
-  <div class="feat">
-    <div class="f"><div class="ic">📰</div><b>割り込めるニュース</b><span>気になったら「待って、それ詳しく」</span></div>
-    <div class="f"><div class="ic">🏗️</div><b>現場ハンズフリー</b><span>歩きながら図面仕様を照会</span></div>
-    <div class="f"><div class="ic">🚗</div><b>運転中の口述</b><span>報告書を口述、移動時間が作業時間に</span></div>
-    <div class="f"><div class="ic">🗣️</div><b>語学・面接練習</b><span>相づちも割り込みもある本物の会話</span></div>
-  </div>
-  <span class="kick">事例グリッド</span><span class="sno">21</span>
-</div>
-
-<!-- 22 正直な現在地 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">07</span><h2>正直な現在地</h2></div>
+  <div class="head-row"><span class="secno">08</span><h2>正直な現在地 — GPT-Live自体の制限</h2></div>
   <div class="note-box">
     <h3>誇張なしで見る制限・不確定要素</h3>
     <ul>
       <li>「割り込みが多すぎて話しづらい」という声も一部にあります</li>
       <li>日本語の流暢さについて、公式は非ネイティブなアクセントの差がありうると認めています</li>
-      <li>GPT-Live自体のAPIはまだ提供されていません（Coming soon）</li>
-      <li>ビデオ・画面共有との同時利用は初期リリースでは不可と報じられています</li>
-    </ul>
-  </div>
-  <span class="kick">正直な現在地</span><span class="sno">22</span>
-</div>
-
-<!-- 23 キーボードレスの未来 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">07</span><h2>キーボードレスの未来</h2></div>
-  <div class="ba">
-    <div class="panel before"><span class="tag">これまで：キーボード</span><ul>
-      <li>プロンプトを書き、結果を読み、また書く</li>
-      <li>「書く→読む」の往復が活用速度を決めていた</li>
-    </ul></div>
-    <div class="mid">→</div>
-    <div class="panel after"><span class="tag">これから：会話</span><ul>
-      <li>指示→確認→修正→実行が会話のテンポで回る</li>
-      <li>話し相手が、そのまま仕事の発注窓口になる</li>
-    </ul></div>
-  </div>
-  <span class="kick">キーボードレスの未来</span><span class="sno">23</span>
-</div>
-
-<!-- 24 未来の一日 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">07</span><h2>未来の一日（イメージ）</h2></div>
-  <div class="timeline">
-    <div class="row"><span class="tbadge">朝</span><div><b>歩きながら指示</b><p>「昨日の続きのリサーチをまとめて。午後の商談の想定問答も作って、終わったら電話して」</p></div></div>
-    <div class="row"><span class="tbadge">昼</span><div><b>AIから電話</b><p>進捗の電話が来て、口頭で修正を伝える</p></div></div>
-    <div class="row"><span class="tbadge">夕方</span><div><b>成果物が完成</b><p>キーボードに触れないまま、一日の仕事が形になっている</p></div></div>
-  </div>
-  <p class="ghost">GPT-Liveと既存のエージェント技術を素直につなぐと描ける未来像です</p>
-  <span class="kick">未来の一日</span><span class="sno">24</span>
-</div>
-
-<!-- 25 使い方4ステップ -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">08</span><h2>使い方（今日から試す）</h2></div>
-  <ul class="steps">
-    <li><span class="n">1</span>ChatGPTアプリを最新版に更新する（iOS/Android。Webはそのままで可）</li>
-    <li><span class="n">2</span>入力欄の右にあるVoiceボタンをタップする</li>
-    <li><span class="n">3</span>話しかける。途中で割り込んでいいし、「ちょっと待って」と言えば待ってくれる</li>
-    <li><span class="n">4</span>終わるときは「会話を終了して」と言うか、終了ボタンをタップ</li>
-  </ul>
-  <span class="kick">使い方</span><span class="sno">25</span>
-</div>
-
-<!-- 26 悩み→こう話す対応表 -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">08</span><h2>悩み → こう話しかける</h2></div>
-  <ul class="map">
-    <li><span class="q">何ができるか知りたい</span><span class="ar">→</span><span class="a">「GPT-Liveになって何が変わったの？デモっぽく見せて」</span></li>
-    <li><span class="q">営業の練習がしたい</span><span class="ar">→</span><span class="a">「値下げ要求の厳しいお客さん役になって。遠慮なく割り込んで」</span></li>
-    <li><span class="q">通訳してほしい</span><span class="ar">→</span><span class="a">「英語と日本語の同時通訳者になって」</span></li>
-    <li><span class="q">相談に乗ってほしい</span><span class="ar">→</span><span class="a">「今日あったことを整理したいから聞き役になって」</span></li>
-    <li><span class="q">ニュースが聞きたい</span><span class="ar">→</span><span class="a">「今朝のAI関連ニュースを番組みたいに読み上げて」</span></li>
-  </ul>
-  <span class="kick">悩み→話し方</span><span class="sno">26</span>
-</div>
-
-<!-- 27 開発者向け現在地 -->
-
-<!-- 🎁 プレゼント訴求（QR） -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <p class="eyebrow">🎁 プレゼント</p><h2 class="stitle">今日の使い方は、そのまま持ち帰れます</h2>
-  <div class="giftflex">
-    <div class="card" style="text-align:left;padding:26px 32px;">
-      <ul>
-        <li><b>ChatGPT Live活用術100選</b> — 話しかけるだけのフレーズ集（1本ずつコピー可）</li>
-        <li><b>おすすめ音声入力AI 5選</b> — キーボードレス化の相棒ツール</li>
-        <li><b>リアルタイム翻訳サイト</b> — APIキーを入れるだけの同時通訳（デプロイ済み）</li>
-      </ul>
-      <p style="font-size:13.5px;color:var(--ink-mid);margin-top:10px;">「悩み→こう話す」の完全版100本も収録。概要欄のリンク、またはQRコードから</p>
-    </div>
-    <div><div class="qrbox"></div><div class="qr-cap">スマホで読み取る 📱</div></div>
-  </div>
-  <span class="kick">プレゼント②</span><span class="sno"></span>
-</div>
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">09</span><h2>開発者向けの現在地</h2></div>
-  <div class="cols c2" style="align-items:center;">
-    <div><ul class="checks">
-      <li>GPT-LiveのAPIは未提供（公式に「Coming soon to the API」）</li>
-      <li>いま使えるのは Realtime API（gpt-realtime系モデル）</li>
-      <li>WebRTC/WebSocketで音声エージェント・電話統合(SIP)・翻訳が構築可能</li>
-    </ul></div>
-    <div class="card"><h3>翻訳サイトの技術根拠</h3><p style="font-size:15px;line-height:1.7;">プレゼントの「リアルタイム翻訳サイト」は、このRealtime APIをブラウザから直接叩く構成で作りました。</p></div>
-  </div>
-  <span class="kick">開発者向け</span><span class="sno">27</span>
-</div>
-
-<!-- 28 注意点まとめ -->
-<div class="slide">
-  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <div class="head-row"><span class="secno">09</span><h2>知っておきたい注意点</h2></div>
-  <div class="note-box">
-    <h3>実務に使う前に</h3>
-    <ul>
       <li>初期リリースではビデオ・画面共有との同時利用は不可と報じられています</li>
-      <li>ロールアウト初期には一部有料ユーザーに1日約1時間の利用制限があるとの報道も（流動的）</li>
-      <li>音声会話データは既定でAI学習にオプトアウト、30日保持・手動削除可</li>
-      <li>営業電話へのAI活用には特定商取引法など日本の法規制への配慮が必要</li>
+      <li>Business/Enterprise/Eduワークスペースは初期非対応と報じられています</li>
     </ul>
   </div>
-  <span class="kick">注意点</span><span class="sno">28</span>
+  <span class="kick">現在地①</span><span class="sno">25</span>
 </div>
 
-<!-- 29 まとめ -->
+<!-- 26 正直な現在地② パイプライン運用注意 -->
 <div class="slide">
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
-  <p class="eyebrow">まとめ</p><h2 class="stitle">GPT-Liveが変えたのは<span class="hl">「声の仕事」の前提</span></h2>
-  <ul class="checks" style="max-width:820px;">
-    <li>全二重の会話で「AIと話している感じ」が薄れた</li>
-    <li>裏でGPT-5.5が働くから、雑談の顔をして中身は賢い</li>
-    <li>営業電話・電話代行・通訳という「声の仕事」が実用水準の入り口に立った</li>
-  </ul>
-  <span class="kick">まとめ</span><span class="sno">29</span>
+  <div class="head-row"><span class="secno">08</span><h2>知っておきたい注意点</h2></div>
+  <div class="note-box">
+    <h3>パイプライン運用の前に</h3>
+    <ul>
+      <li>メールの自動返信・自動送信は一度に全自動化しない。「下書き自動生成、送信は人間が確認」から始める</li>
+      <li>商談の録音・AIによる書き起こしには相手の同意が必要な場面が多い</li>
+      <li>見積書の自動生成は必ずドラフト扱い。金額の最終確認は人間が行う</li>
+      <li>APIキーは利用上限を設定した専用キーを使い、共有PC・公開Wi-Fiでは使わない</li>
+      <li>営業電話・メールへのAI活用は特定商取引法・個人情報保護法など国内規制の対象</li>
+    </ul>
+  </div>
+  <span class="kick">現在地②</span><span class="sno">26</span>
 </div>
 
-<!-- 30 CTA -->
+<!-- 27 使い方 -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <div class="head-row"><span class="secno">08</span><h2>使い方（AI商談エンジンを試す）</h2></div>
+  <ul class="steps">
+    <li><span class="n">1</span>ai-meeting.htmlを開き、OpenAIのAPIキーを入力する</li>
+    <li><span class="n">2</span>「自社のノウハウ・トークスクリプト」欄に商品説明や話し方のポイントを入力する</li>
+    <li><span class="n">3</span>「商談を開始する」ボタンを押し、マイクに向かって話す</li>
+    <li><span class="n">4</span>「商談を終了する」ボタンを押すと、議事録と見積もりドラフトが自動で表示される</li>
+  </ul>
+  <span class="kick">使い方</span><span class="sno">27</span>
+</div>
+
+<!-- 28 まとめ -->
+<div class="slide">
+  <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
+  <p class="eyebrow">まとめ</p><h2 class="stitle">GPT-Liveが変えたのは<span class="hl">「商談という仕事」の前提</span></h2>
+  <ul class="checks" style="max-width:900px;">
+    <li>商品設計からフロント制作、提案資料生成までは、すでに実務レベルでAIに任せられる</li>
+    <li>GPT-Liveの全二重構造と推論委譲が「聞く・即応する・調べる」を直撃し、商談そのものをAIが担当できるようになった</li>
+    <li>商談後の議事録・見積もり生成まで含め、メールが来てから商談までの一本の流れが設計できる。受注の最終判断だけは、今も人間の仕事です</li>
+  </ul>
+  <span class="kick">まとめ</span><span class="sno">28</span>
+</div>
+
+<!-- 29 CTA（プレゼント訴求②） -->
 <div class="slide"><span class="coin" style="top:auto;left:auto;bottom:-42px;right:-36px;"></span>
   <div class="logo"><svg width="118" height="27" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
   <h2 class="stitle">もっと学ぶ</h2>
@@ -660,12 +635,12 @@
   <div class="card" style="max-width:880px;margin-top:22px;display:flex;gap:30px;align-items:center;text-align:left;padding:24px 32px;">
     <div style="flex:1;">
       <h3 style="margin-bottom:10px;">🎁 今回プレゼントあります</h3>
-      <p style="font-size:15px;color:var(--ink-mid);line-height:1.7;">ChatGPT Live活用術100選／おすすめ音声入力AI5選／リアルタイム翻訳サイト（デプロイ済み） — 概要欄のリンク、またはQRコードから受け取れます</p>
+      <p style="font-size:15px;color:var(--ink-mid);line-height:1.7;">AI商談エンジン＋Zoom/Meet連携サーバーコード／ChatGPT Live活用術100選／おすすめ音声入力AI5選 — 概要欄のリンク、またはQRコードから受け取れます</p>
     </div>
     <div><div class="qrbox" style="width:140px;height:140px;"></div><div class="qr-cap">スマホで読み取る 📱</div></div>
   </div>
-  <p class="ghost" style="margin-top:14px;">出典: OpenAI公式ブログ／公式X（@OpenAI）／本資料は非公式まとめ</p>
-  <span class="kick">CTA・出典</span><span class="sno">30</span>
+  <p class="ghost" style="margin-top:14px;">出典: OpenAI公式ブログ／公式X（@OpenAI）／Recall.ai公式ドキュメント／本資料は非公式まとめ</p>
+  <span class="kick">CTA・出典</span><span class="sno">29</span>
 </div>
 
 <div class="nav">

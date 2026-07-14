@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ChatGPT Live（GPT-Live）徹底解説 — 1枚資料 | AIエージェント・Kawaru theme</title>
+<title>AI営業パイプライン徹底解説（ChatGPT Live） — 1枚資料 | AIエージェント・Kawaru theme</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   /* ===== セマンティックトークン（テーマはこの :root 値だけ差し替え）===== */
@@ -172,33 +172,88 @@
     <span class="coin"></span>
     <div class="chan"><svg width="132" height="30" style="color:var(--brand)"><use href="#kawaru-logo"/></svg></div>
     <div class="eyebrow">ONE-PAGE GUIDE</div>
-    <h1><span class="hl">ChatGPT Live</span>（GPT-Live）徹底解説</h1>
-    <p class="sub">「声の仕事」がAIに置き換わる — 営業・電話代行はその入り口</p>
-    <div class="meta"><span class="k">2026年7月8日発表</span><span>フルデュプレックス音声AI</span><span>営業・電話代行</span><span>出典明記</span></div>
+    <h1>メールが来たら、あとは全部<span class="hl">AI</span>がやってくれる</h1>
+    <p class="sub">ChatGPT Liveで作る「AI営業パイプライン」徹底解説</p>
+    <div class="meta"><span class="k">2026年7月11日</span><span>8ステップ設計</span><span>GPT-Live × Recall.ai</span><span>サーバーコード配布</span></div>
   </div>
 
   <div class="tocbar">
-    <a href="#s1">① GPT-Liveとは</a><a href="#s2">② 何が新しいか</a><a href="#s3">③ 数字で見る</a><a href="#s4">④ 声の仕事の変化</a>
-    <a href="#s5">⑤ キーボードレスの未来</a><a href="#s6">⑥ 使い方</a><a href="#s7">⑦ 開発者向け</a><a href="#s8">⑧ 注意点</a>
+    <a href="#s1">① 全体像</a><a href="#s2">② 商品設計・フロント</a><a href="#s3">③ メール一次対応</a><a href="#s4">④ なぜ声のAIが商談を担えるか</a>
+    <a href="#s5">⑤ 商談後処理〜受注</a><a href="#s6">⑥ デモ</a><a href="#s7">⑦ 本格連携</a><a href="#s8">⑧ コラム</a><a href="#s9">⑨ 使い方</a><a href="#s10">⑩ 注意点</a>
   </div>
 
   <!-- TL;DR -->
   <section>
     <div class="sec-h"><div class="no">!</div><h2>まず3行で</h2></div>
     <div class="tldr">
-      <div class="t"><div class="k">POINT 1</div><p>OpenAIが2026年7月8日、聞きながら同時に話せる「フルデュプレックス（全二重）」音声モデル GPT-Live を発表。相づち・割り込み・沈黙まで人間の会話に近づいた</p></div>
-      <div class="t"><div class="k">POINT 2</div><p>賢さも別物。難しい質問は裏側でGPT-5.5に委譲され、科学推論ベンチGPQAは従来音声モードの45.3%から84.2%へ</p></div>
-      <div class="t"><div class="k">POINT 3</div><p>「声でやりとりする仕事」——営業電話、電話代行、受付、相談、通訳——がAIで実用レベルに。その先には話すだけでエージェントが動く働き方がある</p></div>
+      <div class="t"><div class="k">POINT 1</div><p>OpenAIが2026年7月8日に発表した音声モデル「GPT-Live」は、聞きながら同時に話せる「フルデュプレックス（全二重）」構造で、会話の自然さも賢さも従来の音声AIから大きく引き上げられた</p></div>
+      <div class="t"><div class="k">POINT 2</div><p>この進化により、「問い合わせ対応→商談→受注」という営業の一連の流れを、メールの一次対応からオンライン商談まで丸ごとAIに任せる設計が現実的になった</p></div>
+      <div class="t"><div class="k">POINT 3</div><p>本資料ではその全体設計（8ステップ）を解説しつつ、実際に声で商談できるAIエンジンのデモと、Zoom/Google Meetの実会議にAIを参加させる本物のサーバーコードを配布する</p></div>
     </div>
     <div class="secsub">こんな疑問、ありませんか？</div>
-    <ul class="bullets"><li>GPT-Liveって結局、従来の音声モードと何が違うの？</li><li>営業電話や電話代行はもうAIに任せられる？</li><li>開発者は今、実際に何が使えるの？</li></ul>
+    <ul class="bullets"><li>メールが来たらAIが返信・アポ取りまでやってくれるって本当？</li><li>オンライン商談まで声のAIに任せられる？</li><li>Zoom・Google Meetの実会議にAIを参加させるにはどうすればいい？</li></ul>
   </section>
 
-  <!-- 1 GPT-Liveとは -->
+  <!-- 1 全体像 -->
   <section id="s1">
-    <div class="sec-h"><div class="no">1</div><h2>GPT-Liveとは何か</h2></div>
+    <div class="sec-h"><div class="no">1</div><h2>全体像 — AI営業パイプライン8ステップ</h2></div>
+    <p class="lead">「問い合わせメールが1通届いたところから、商談を経て受注するところまで」を、8つのステップに分解しました。</p>
+    <table class="cmp">
+      <thead><tr><th>#</th><th>ステップ</th><th>何をするか</th><th>主に使う技術</th></tr></thead>
+      <tbody>
+        <tr><td>①</td><td>商品設計</td><td>AI研修・AIコンサルのような商品を、AIとの壁打ちで設計する</td><td>ChatGPT / Claudeでの壁打ち</td></tr>
+        <tr><td>②</td><td>フロント制作</td><td>集客用のLP・Webサイトを作る</td><td>Claude Code / Codex等のAIコーディングツール</td></tr>
+        <tr><td>③</td><td>メール一次対応</td><td>問い合わせメールを検知・分類し、返信文とアポ日程を提案する</td><td>Gmail API、LLMによる分類・文面生成、カレンダー連携</td></tr>
+        <tr><td>④</td><td>提案資料生成</td><td>ヒアリング内容から商談用スライド・提案資料を自動生成する</td><td>Gamma等の資料生成AI</td></tr>
+        <tr><td>⑤</td><td>オンライン商談</td><td>Zoom / Google MeetでAI（ChatGPT Live）が声で商談を担当する</td><td>GPT-Live、Realtime API、会議ボットAPI</td></tr>
+        <tr><td>⑥</td><td>商談後処理</td><td>録音・文字起こしから議事録を作成し、見積書を自動生成する</td><td>文字起こし＋LLM要約</td></tr>
+        <tr><td>⑦</td><td>フォロー対応</td><td>見積送付後のやり取り・条件調整をメールで継続する</td><td>LLMによるメール文面生成</td></tr>
+        <tr><td>⑧</td><td>受注</td><td>クロージングし、契約・発注につなげる</td><td>人間の最終判断</td></tr>
+      </tbody>
+    </table>
+    <div class="box">
+      <h3>すべてのステップが同じ完成度でAI任せにできるわけではない</h3>
+      <ul>
+        <li>①②④はすでに実務レベルで使える段階</li>
+        <li>③⑦は「仕組みとしては組める」段階。本資料ではアーキテクチャとして解説し、特定のメールアドレスへの実接続はしていない</li>
+        <li>⑤⑥は今回GPT-Liveの登場でようやく現実的になった部分で、本資料で実際に動くものまで用意している</li>
+        <li>⑧の最終判断は今のところ人間の仕事</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2 商品設計・フロント・提案資料 -->
+  <section id="s2">
+    <div class="sec-h"><div class="no">2</div><h2>ステップ①②④ — 商品設計・フロント・提案資料生成</h2></div>
+    <div class="cards">
+      <div class="c"><div class="pin">①</div><h3>商品設計</h3><p>ChatGPTやClaudeに相手役・壁打ち相手になってもらいながら、「どんな悩みを持つ人に」「何を」「いくらで」提供するかを固める。在庫を持たない知見型の商品ほど、壁打ちだけで骨子まで作れる。</p></div>
+      <div class="c"><div class="pin">②</div><h3>フロント制作</h3><p>Claude CodeやCodexのようなAIコーディングツールに、商品とトーンを伝えるだけでLPやサイトのデザインから実装まで任せられる段階。問い合わせフォームから次のステップへの導線を作っておく。</p></div>
+      <div class="c accent"><div class="pin">④</div><h3>提案資料生成</h3><p>ヒアリングメモや問い合わせ内容をGamma等に渡し、商談専用の提案資料に組み替えてもらう。ゼロから作らせず「素材を渡して整形させる」のがポイント。</p></div>
+    </div>
+    <p class="note" style="margin-top:10px;">このあたりは既にAI活用の定番領域のため、本資料では深追いせず、次の「メールが届いてから」の部分に紙面を割きます。</p>
+  </section>
+
+  <!-- 3 メール一次対応 -->
+  <section id="s3">
+    <div class="sec-h"><div class="no">3</div><h2>ステップ③ — メールの一次対応</h2></div>
+    <p class="lead">問い合わせメールが届いてからの一次対応は、次の4つの要素の組み合わせで設計できます。</p>
+    <ul class="bullets">
+      <li>受信の検知：Gmail APIのプッシュ通知、またはZapier・Makeのようなノーコード連携</li>
+      <li>内容の分類：メール本文をLLMに渡し、新規の問い合わせか・既存案件の返信か・クレームかを分類</li>
+      <li>返信文の生成：分類結果に応じて、商品情報や過去のやり取りを踏まえた返信文を下書きさせる</li>
+      <li>アポの提案：Google Calendar API等で空き時間を取得し、返信文に候補日時を差し込む</li>
+    </ul>
+    <div class="box" style="margin-top:16px;">
+      <h3>この章はアーキテクチャの解説です</h3>
+      <p style="font-size:14px;color:var(--ink);">本資料ではこの部分を仕組みの解説にとどめ、<span class="hl-a">特定のメールアドレスへ実際に接続する自動化は行っていません。</span>メールの自動返信は一度動かすと止めにくい「常時稼働の仕組み」であり、誤送信や誤判定のリスクをその場で検証しきれないためです。実際に組む場合は、最初は「下書きまで自動生成し、送信は人間が確認してから押す」半自動の運用から始めることをおすすめします。</p>
+    </div>
+  </section>
+
+  <!-- 4 なぜ声のAIが商談まで担えるのか -->
+  <section id="s4">
+    <div class="sec-h"><div class="no">4</div><h2>ステップ⑤ — なぜ声のAIが商談まで担えるのか</h2></div>
     <div class="row2">
-      <div><p class="body">GPT-Liveは、2026年7月8日にOpenAIが発表した新世代の音声モデル群です。<span class="hl">「聞くことと話すことを同時に行うフルデュプレックス（全二重）構造」</span>を採用し、相づち・割り込み・沈黙の間まで人間の会話に近い受け答えができます。ユーザー向けにはChatGPTの音声モード（Voice）として提供され、有料標準の「GPT-Live-1」と無料標準の「GPT-Live-1 mini」があります。詳細は<a href="https://openai.com/ja-JP/index/introducing-gpt-live/" style="color:var(--brand-deep);font-weight:700;">公式ブログ</a>と<a href="https://x.com/OpenAI/status/2074907025537224840" style="color:var(--brand-deep);font-weight:700;">公式Xの発表スレッド</a>にまとまっています。</p></div>
+      <div><p class="body">土台になっているのが、2026年7月8日にOpenAIが発表した音声モデル「<span class="hl">GPT-Live</span>」です（<a href="https://openai.com/ja-JP/index/introducing-gpt-live/" style="color:var(--brand-deep);font-weight:700;">公式ブログ</a>・<a href="https://x.com/OpenAI/status/2074907025537224840" style="color:var(--brand-deep);font-weight:700;">公式X</a>）。従来のChatGPTの音声モードは「順番に話すトランシーバー」でしたが、GPT-Liveは<span class="hl">聞くことと話すことを同時に行う「フルデュプレックス（全二重）」構造</span>で、相づちを打ちながら聞き、割り込まれれば即座に譲り、考える時間が必要なら黙って待ちます。</p></div>
       <div class="xcard">
         <div class="xhead"><div class="xavatar">O</div><div><div class="xname">OpenAI</div><div class="xhandle">@OpenAI</div></div></div>
         <p class="xtext">Introducing GPT-Live, a new generation of voice models for natural human-AI interaction. Rolling out in ChatGPT starting today. You'll want to turn the sound on for this one.</p>
@@ -206,128 +261,116 @@
         <div class="xstats"><span>♡ 24,139</span><span>👁 表示734万回</span></div>
       </div>
     </div>
-    <div class="secsub">発表から分かったこと</div>
-    <ul class="bullets">
-      <li>提供はChatGPTの iOS / Android / Web。「Voiceボタンをタップするだけ」</li>
-      <li>ロールアウトは発表当日から数日かけて全ユーザーへ。7月9日時点でGo / Plus / Proプランは展開完了、無料ユーザーは進行中</li>
-      <li>GPT-Live自体のAPIは「Coming soon（近日提供）」。開発者は今は既存のRealtime APIを使う（第7章）</li>
-    </ul>
-  </section>
-
-  <!-- 2 何が新しいか -->
-  <section id="s2">
-    <div class="sec-h"><div class="no">2</div><h2>何がそんなに新しいのか — 3つの柱</h2></div>
-    <div class="cards">
-      <div class="c"><div class="pin">1</div><h3>フルデュプレックス</h3><p>聞くことと話すことを同時に行う構造。1秒間に何度も「話す・聞く・待つ・割り込む・ツールを呼ぶ」を判断していると報じられています。</p></div>
-      <div class="c accent"><div class="pin">2</div><h3>人格・会話の質</h3><p>人間評価で75.7%がGPT-Live-1をAdvanced Voice Modeより選好（miniでも69.2%）。話していて楽しいことを性能として設計。</p></div>
-      <div class="c"><div class="pin">3</div><h3>推論委譲</h3><p>検索や深い推論が必要な質問は、裏側でGPT-5.5などのフロンティアモデルに委譲し、結果を会話に持ち帰る。</p></div>
-    </div>
-    <div class="secsub">Advanced Voice Mode（従来）→ GPT-Live</div>
-    <div class="ba">
-      <div class="panel before"><span class="tag">Before：AVM</span><ul><li>ターン制。相手が話し終わるのを待つ</li><li>割り込むと不自然な間ができる</li><li>検索・深い推論をしながらの会話は苦手</li></ul></div>
-      <div class="mid">→</div>
-      <div class="panel after"><span class="tag">After：GPT-Live</span><ul><li>フルデュプレックス。聞きながら話す</li><li>割り込み・沈黙も自然に処理する</li><li>裏でGPT-5.5に検索・推論を委譲できる</li></ul></div>
-    </div>
-  </section>
-
-  <!-- 3 数字で見る -->
-  <section id="s3">
-    <div class="sec-h"><div class="no">3</div><h2>数字で見るGPT-Live — 「音声なのに賢い」の意味</h2></div>
+    <div class="secsub">数字で見るGPT-Live — 「音声なのに賢い」の意味</div>
     <div class="stats">
-      <div class="stat"><div class="n">84.2<small>%</small></div><div class="u">GPQA（科学推論、AVM比 45.3%→）</div><div class="l">頭の良さが約1.9倍</div></div>
-      <div class="stat"><div class="n">75.2<small>%</small></div><div class="u">BrowseComp（Web検索、AVM比 0.7%→）</div><div class="l">調べながら話せる</div></div>
-      <div class="stat"><div class="n">75.7<small>%</small></div><div class="u">会話選好（人間評価）</div><div class="l">AVMより好まれた割合</div></div>
+      <div class="stat"><div class="n">84.2<small>%</small></div><div class="u">GPQA（科学推論、従来45.3%→）</div><div class="l">頭の良さが大きく向上</div></div>
+      <div class="stat"><div class="n">75.2<small>%</small></div><div class="u">BrowseComp（Web検索、従来0.7%→）</div><div class="l">調べながら話せる</div></div>
+      <div class="stat"><div class="n">75.7<small>%</small></div><div class="u">会話選好（人間評価）</div><div class="l">従来モードより好まれた割合</div></div>
     </div>
-    <p class="note" style="margin-top:10px;">※ いずれも公式ブログの数値として各メディア（ITmedia・Impress Watch等）が報じているベンチマークです。τ³-Voice Telecom（顧客サポート模擬）でも全GPT-LiveモデルがAVMを上回ったと報告されています。</p>
-    <div class="secsub">プラン別の料金（報道ベース・AI総合研究所）</div>
-    <div class="price">
-      <div class="p"><div class="name">Free</div><div class="amt">$0</div><ul><li>GPT-Live-1 mini</li></ul></div>
-      <div class="p"><div class="name">Go</div><div class="amt">$8<small>/月</small></div><ul><li>GPT-Live-1</li></ul></div>
-      <div class="p best"><div class="name">Plus</div><div class="amt">$20<small>/月</small></div><ul><li>GPT-Live-1</li><li>本格利用向け</li></ul></div>
-      <div class="p"><div class="name">Pro</div><div class="amt">$200<small>/月</small></div><ul><li>GPT-Live-1（利用上限大）</li></ul></div>
-      <div class="p"><div class="name">Business / Enterprise / Edu</div><div class="amt">ー</div><ul><li>初期非対応（AVM継続）</li></ul></div>
-    </div>
-    <p class="note" style="margin-top:10px;">出典：<a href="https://www.ai-souken.com/article/what-is-gpt-live" style="color:var(--ink-mid);">AI総合研究所</a>の報道による整理。無料でもminiが使えるため、新世代の音声会話の入場料は実質ゼロになりました。</p>
-  </section>
-
-  <!-- 4 声の仕事の変化 -->
-  <section id="s4">
-    <div class="sec-h"><div class="no">4</div><h2>「声の仕事」が置き換わる — 営業・電話代行はその一例</h2></div>
-    <p class="lead">営業電話・電話代行・受付・サポート窓口の仕事を分解すると、中身は4つです。</p>
+    <p class="note" style="margin-top:10px;">難しい質問——検索が必要な質問や、深い推論が必要な相談——が来ると、GPT-Liveは会話のテンポを保ったまま、裏側でGPT-5.5のようなフロンティアモデルに仕事を委譲し、結果を会話に自然に織り込みます。顧客対応を模したベンチマーク（τ³-Voice Telecom）でも、GPT-Live系のモデルが従来モードを一貫して上回ったと報じられています。</p>
+    <div class="secsub">商談という仕事の中身</div>
     <div class="flow">
-      <div class="step"><div class="t">① 聞く</div><div class="d">遮らず相づちを打ちながら要点を掴む</div></div><div class="arrow">→</div>
-      <div class="step"><div class="t">② 即応する</div><div class="d">不自然な間を作らずテンポよく返す</div></div><div class="arrow">→</div>
-      <div class="step"><div class="t">③ 調べる</div><div class="d">分からないことを確認して正確に答える</div></div><div class="arrow">→</div>
-      <div class="step"><div class="t">④ 記録する</div><div class="d">会話を整理し次のアクションにつなぐ</div></div>
+      <div class="step"><div class="t">① 聞く</div><div class="d">相手の話を遮らず、相づちを打ちながら要点を掴む</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">② 即応する</div><div class="d">不自然な間を作らず、テンポよく返す</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">③ 調べる</div><div class="d">分からないことをその場で確認し、正確に答える</div></div><div class="arrow">→</div>
+      <div class="step"><div class="t">④ 記録する</div><div class="d">話した内容を整理し、次のアクションにつなぐ</div></div>
     </div>
-    <p class="note" style="margin-top:10px;">①②はフルデュプレックスが、③は推論委譲とWeb検索が、④はテキスト化と要約がそれぞれ直撃しています。</p>
-    <div class="secsub">「声の仕事」の事例</div>
-    <div class="feat">
-      <div class="f"><div class="ic">営</div><b>営業電話</b><span>ロールプレイ・壁打ちの実験が報告</span></div>
-      <div class="f"><div class="ic">電</div><b>電話代行</b><span>τ³-Voice TelecomでAVM超え</span></div>
-      <div class="f"><div class="ic">相</div><b>相談</b><span>悩みを声で整理する使い方</span></div>
-      <div class="f"><div class="ic">通</div><b>通訳</b><span>ライブ翻訳・アンビエント通訳</span></div>
-    </div>
-    <p class="note" style="margin-top:10px;">X上では、GPT-Live以前の音声モードを使ったコールド架電で「2〜3%の商談化率だった」という報告が見られました（個人の報告であり公式統計ではありません）。ターン制のぎこちない音声ですらその数字が出ていたなら、相づちと割り込みを備えた自然な会話でどうなるか——期待が集まるのは自然な流れです。</p>
-    <p class="body" style="margin-top:10px;">ただしChatGPTアプリのGPT-Liveを直接「自社の電話番」にはまだできません。APIは近日提供の段階で、電話システムに組み込むには既存のRealtime APIが必要です。また日本では特定商取引法や個人情報の扱いなど、営業電話に固有の法規制があり、「AIだから何をしてもいい」わけではありません。置き換えの波が来ていることと、運用に設計が要ることは、両方本当です。</p>
+    <p class="note" style="margin-top:10px;">①②はフルデュプレックスの構造が、③は推論委譲とWeb検索がそれぞれ直撃しています。④は次章の商談後処理とつながります。ただしGPT-Liveそのものは「ChatGPTの音声モード」であり、そのままではZoom・Google Meetの会議室には入れません。会議室への橋渡しは第7章で扱います。</p>
   </section>
 
-  <!-- 5 キーボードレスの未来 -->
+  <!-- 5 商談後処理〜受注 -->
   <section id="s5">
-    <div class="sec-h"><div class="no">5</div><h2>キーボードレスの未来 — 会話がエージェントの操縦桿になる</h2></div>
-    <p class="body">これまでAIへの指示はキーボードが担ってきました。プロンプトを書き、結果を読み、また書く。GPT-Liveが示したのは、この操縦桿が声に替わる未来です。単なる音声入力（書く代わりに喋る）ではなく、フルデュプレックスの会話では指示→確認→修正→実行のループが会話のテンポで回ります。推論委譲の仕組みは「会話しながら裏でエージェントが動く」構造そのものです。</p>
-    <div class="cycle">
-      <div class="node"><b>① 話す</b><span>口頭で指示・相談</span></div><span class="ar">→</span>
-      <div class="node"><b>② 委譲</b><span>裏で検索・推論が走る</span></div><span class="ar">→</span>
-      <div class="node"><b>③ 割り込む</b><span>会話のテンポで修正</span></div><span class="ar">→</span>
-      <div class="node"><b>④ 受け取る</b><span>成果物が会話に返る</span></div><span class="ar">↻</span>
-    </div>
-    <p class="note" style="margin-top:10px;">superwhisperやWispr Flowのような音声入力ツールでコーディングエージェントに口頭指示を出すスタイルもすでに広がっており、「AIに何かを頼む＝キーボードに向かう」という等式は崩れつつあります。</p>
-  </section>
-
-  <!-- 6 使い方 -->
-  <section id="s6">
-    <div class="sec-h"><div class="no">6</div><h2>使い方（初心者向け） — 今日から試す手順</h2></div>
+    <div class="sec-h"><div class="no">5</div><h2>ステップ⑥⑦⑧ — 商談後処理から受注へ</h2></div>
     <ul class="steps">
-      <li><span class="n">1</span>ChatGPTアプリを最新版に更新する（iOS / Android。Webはそのままでも可）</li>
-      <li><span class="n">2</span>入力欄の右にある音声（Voice）ボタンをタップする</li>
-      <li><span class="n">3</span>話しかける。途中で割り込んでいいし、「ちょっと待って」と言えば待ってくれる</li>
-      <li><span class="n">4</span>終わるときは「会話を終了して」と言うか、終了ボタンをタップ</li>
-    </ul>
-    <div class="secsub">こんなとき → こう話しかける</div>
-    <ul class="map">
-      <li><span class="q">何ができるか知りたい</span><span class="ar">→</span><span class="a">「GPT-Liveになって何が変わったの？デモっぽく見せて」</span></li>
-      <li><span class="q">営業の練習がしたい</span><span class="ar">→</span><span class="a">「あなたは値下げ要求の厳しいお客さん役。途中で遠慮なく割り込んで」</span></li>
-      <li><span class="q">通訳してほしい</span><span class="ar">→</span><span class="a">「今から英語と日本語の同時通訳者になって」</span></li>
-      <li><span class="q">相談に乗ってほしい</span><span class="ar">→</span><span class="a">「今日あったことを整理したいから聞き役になって」</span></li>
-      <li><span class="q">ニュースが聞きたい</span><span class="ar">→</span><span class="a">「今朝のAI関連ニュースを番組みたいに読み上げて」</span></li>
+      <li><span class="n">1</span>商談中の音声・文字起こしをLLMに渡し、「議事録」（日時・参加者・議題・決定事項・次のアクション）と「見積書のドラフト」を自動生成する。見積もりはあくまでドラフトであり、金額の最終確認は人間が行う</li>
+      <li><span class="n">2</span>見積送付後のフォローも、メール一次対応（第3章）と同じ設計思想で対応する。受信内容をLLMに分類・要約させ、返信文の下書きを作らせる。値引き交渉や契約条件のような繊細な判断は、最終的な送信判断を人間が行う</li>
+      <li><span class="n">3</span>受注（契約・発注の確定）は、現時点では人間の最終判断に委ねる領域として扱う。ここまでAIが用意した情報（提案資料・商談の記録・見積もり）をもとに、人間が意思決定するのが今、現実的なライン</li>
     </ul>
   </section>
 
-  <!-- 7 開発者向け -->
+  <!-- 6 デモ -->
+  <section id="s6">
+    <div class="sec-h"><div class="no">6</div><h2>実際に動くデモ — AI商談エンジンを今すぐ試す</h2></div>
+    <p class="lead">説明だけで終わらせないために、実際にマイクに向かって話しかけて商談の練習ができるAIエンジンを作りました。</p>
+    <div class="cards">
+      <div class="c"><div class="pin">1</div><h3>ノウハウを注入できる</h3><p>「どんな商品を」「どんなトーンで」「何を大事に話すか」をテキストで入力すると、それがAIの前提知識になる</p></div>
+      <div class="c accent"><div class="pin">2</div><h3>音声で商談の会話ができる</h3><p>OpenAIのRealtime API（GPT-Liveと同じ全二重の仕組み）で、マイクに向かって話しかけると相づちを打ちながら会話し、途中で割り込むこともできる</p></div>
+      <div class="c"><div class="pin">3</div><h3>議事録・見積もりを自動生成</h3><p>「商談を終了する」ボタンを押すと、それまでの会話内容から議事録と見積もりドラフトがその場でテキスト化される</p></div>
+    </div>
+    <p class="body" style="margin-top:14px;">今すぐ単体で動くデモです。<a href="./ai-meeting.html" style="color:var(--brand-deep);font-weight:900;">ai-meeting.html を開く →</a>（プレゼントキットにも収録）</p>
+  </section>
+
+  <!-- 7 本格連携 -->
   <section id="s7">
-    <div class="sec-h"><div class="no">7</div><h2>開発者向け — 今の現在地</h2></div>
-    <p class="body">GPT-Live自体のAPIは未提供（公式に「Coming soon to the API」）。いま開発者が使えるのは<span class="hl">Realtime API</span>（gpt-realtime系モデル）で、WebRTC/WebSocketで音声をストリーミングし、音声エージェント・電話統合・リアルタイム翻訳などが構築できます。GPT-Liveで示された方向性を、API側で先取りして組む形です。</p>
-    <p class="note">Realtime APIをブラウザから直接使うリアルタイム翻訳サイトのサンプルも用意しています（プレゼントキットで案内）。</p>
+    <div class="sec-h"><div class="no">7</div><h2>本格連携 — Zoom/Google Meetの実会議にAIを参加させる</h2></div>
+    <p class="lead">デモはわかった、実際の商談で使いたい、という方向けに、実際に動くサーバーコードを用意しました。</p>
+    <p class="body">静的なWebページ（第6章のai-meeting.html）だけでは、Zoom・Google Meetの実際の会議室にAIを参加させることはできません。会議室にボットとして入るには、別途サーバー側の処理が必要です。</p>
+    <div class="secsub">使う技術：Recall.aiのMeeting Bot API</div>
+    <p class="body">Recall.aiは、Zoom・Google Meet・Microsoft Teamsなどにボットとして参加し、音声・映像・文字起こしをリアルタイムで扱えるAPIを提供しているサービスです。料金は<span class="hl">1時間あたり0.5ドル</span>（ボットが会議に参加している時間の従量課金）で、無料トライアルもあります。</p>
+    <ul class="steps">
+      <li><span class="n">1</span>第6章の「AI商談エンジン」（ai-meeting.html）を、Recall.aiのボットが読み込む「顔」として使う</li>
+      <li><span class="n">2</span>ボットのブラウザ環境内でgetUserMediaを呼ぶと会議の音声（人間の発言）を取り込める。これをそのままOpenAI Realtime APIに渡す</li>
+      <li><span class="n">3</span>AIの返答音声がページ内で再生され、それがボットの出力としてそのままZoom・Google Meetの会議室に流れる</li>
+      <li><span class="n">4</span>Recall.aiはリアルタイムの文字起こしをWebhookでサーバーに送ってくるので、それを受け取り蓄積し、商談終了時に議事録・見積もり生成へ渡す</li>
+    </ul>
+    <div class="secsub">配布するサーバーコード</div>
+    <p class="body">このアーキテクチャを実際に動かすための最小構成のサーバーコード（Node.js／Express。常駐プロセスを動かせるホスティングにそのままデプロイできる形）をプレゼントキットに収録しました。実際にnode index.jsで起動確認済みです。</p>
+    <ul class="checks">
+      <li>POST /api/create-bot — 会議URLを受け取り、Recall.aiにボット作成をリクエストする（Recall.aiのAPIキーはサーバー側にだけ置き、ブラウザには出さない）</li>
+      <li>POST /api/recall-webhook — Recall.aiからのリアルタイム文字起こしを受け取り、商談セッションごとに保存する</li>
+      <li>GET /api/session/:id — ボット用ページが自社ノウハウ・会社名を読み込むための参照エンドポイント</li>
+      <li>GET /api/realtime-token — OpenAIの通常APIキーをブラウザに渡さず、短命なclient_secretだけを発行する</li>
+      <li>POST /api/generate-minutes — 保存した文字起こしをOpenAIに渡し、議事録・見積もりを生成する</li>
+    </ul>
+    <div class="box" style="margin-top:16px;">
+      <h3>onepager単体では実会議への参加はできません</h3>
+      <p style="font-size:14px;color:var(--ink);">実際に動かすには、ご自身でRecall.aiのアカウントを作成してAPIキーを取得し、このサーバーコードをデプロイする必要があります。当方が代わりにアカウントを作ることはできませんが、コードとセットアップ手順はプレゼントキットにすべて置いてあります。</p>
+    </div>
   </section>
 
-  <!-- 8 注意点 -->
+  <!-- 8 コラム -->
   <section id="s8">
-    <div class="sec-h"><div class="no">8</div><h2>知っておきたい注意点</h2></div>
+    <div class="sec-h"><div class="no">8</div><h2>コラム — X上で報告されている音声AIの使い方</h2></div>
+    <p class="note">GPT-Live発表後、X上ではさまざまな使い方の報告・構想が見られました（個人の報告であり公式統計ではない点に注意して読んでください）。</p>
+    <ul class="bullets">
+      <li>営業の壁打ち・ロールプレイ：価格交渉や反論処理を声でシミュレーションし、終了後に改善点をフィードバックしてもらう</li>
+      <li>国際商談でのライブ翻訳：非英語圏クライアントとの通話をリアルタイム翻訳しながら進める（公式Xでも「フルデュプレックス構造により、より自然な会話・時間感覚・そしてライブ翻訳まで可能」と明言）</li>
+      <li>コールド架電の実験報告：GPT-Live以前の音声モードを使った実験で「2〜3%の商談化率だった」という報告もあり、より自然な会話ができるGPT-Liveでの改善が期待されている</li>
+      <li>同時通訳・アンビエント通訳：会議・旅行・多言語通話での活用</li>
+      <li>現場・移動中のハンズフリー業務：図面仕様の照会、運転中の口述メモなど</li>
+    </ul>
+    <p class="note" style="margin-top:10px;">一方で「割り込みが多すぎて話しづらいことがある」という声も一部にあり、人間らしくなったからこそ人間らしい欠点も目立つ、という段階です。</p>
+  </section>
+
+  <!-- 9 使い方 -->
+  <section id="s9">
+    <div class="sec-h"><div class="no">9</div><h2>使い方（初心者向け） — AI商談エンジンを試す</h2></div>
+    <ul class="steps">
+      <li><span class="n">1</span>ai-meeting.html を開く</li>
+      <li><span class="n">2</span>OpenAIのAPIキーを入力する（platform.openai.comで発行）</li>
+      <li><span class="n">3</span>「自社のノウハウ・トークスクリプト」欄に、商品説明や話し方のポイントを日本語で入力する</li>
+      <li><span class="n">4</span>「商談を開始する」ボタンを押し、マイクに向かって話す。話が終わったら「商談を終了する」ボタンを押すと、議事録と見積もりドラフトが自動で表示される</li>
+    </ul>
+  </section>
+
+  <!-- 10 注意点 -->
+  <section id="s10">
+    <div class="sec-h"><div class="no">10</div><h2>知っておきたい注意点</h2></div>
     <ul class="checks">
-      <li>初期リリースではビデオ・画面共有との同時利用は不可と報じられています</li>
-      <li>日本語について、公式は「一部の言語では非ネイティブなアクセントや流暢さの差がありうる」と認めています</li>
-      <li>ロールアウト初期には、一部有料ユーザーに1日あたり約1時間程度の利用制限があるという報道があります（流動的な情報です）</li>
-      <li>音声会話のデータは既定でAI学習にオプトアウトされ、30日保持・手動削除が可能と報じられています</li>
-      <li>営業・勧誘の電話にAIを使う場合、特定商取引法など日本の法規制と、通話録音・本人明示の運用設計が必要です</li>
-      <li>会話の自然さには個人差のある評価があり、「割り込みが多い」と感じる報告も一部にあります</li>
+      <li>メールの自動返信・自動送信は一度に全自動化しない。まずは「下書き自動生成、送信は人間が確認」の半自動運用から始めるのが安全</li>
+      <li>商談の録音・AIによる書き起こしには相手の同意が必要な場面が多い。録音・AI利用をしていることを事前に明示する運用にする</li>
+      <li>見積書の自動生成はドラフト扱い。金額の最終確認は人間が行う</li>
+      <li>APIキーの扱い：本資料のデモはOpenAI・Recall.aiのAPIキーをその場で入力する形式。通常のAPIキーはサーバー側で使うことが公式に推奨されている。利用上限（スペンドリミット）を設定した専用キーを使い、共有PC・公開Wi-Fiでは使わない</li>
+      <li>営業電話・メールへのAI活用は法規制の対象。特定商取引法の表示義務や、個人情報保護法上の同意取得など、日本国内の規制を踏まえた運用設計が必要</li>
+      <li>GPT-Live自体の制限：初期リリースではビデオ・画面共有との同時利用は不可、日本語は「非ネイティブなアクセントや流暢さの差がありうる」と公式が認めている。Business/Enterprise/Eduワークスペースは初期非対応と報じられている</li>
+      <li>Recall.aiの利用にはコストがかかる（1時間あたり0.5ドルの従量課金）</li>
     </ul>
   </section>
 
   <div class="box" style="margin:0 52px 40px;display:flex;gap:26px;align-items:center;">
     <div style="flex:1;">
       <h3>🎁 プレゼントキットのご案内</h3>
-      <p style="font-size:14px;color:var(--ink);">ChatGPT Live活用術100選・おすすめ音声入力AI5選・リアルタイム翻訳サイトの3点セットは <a href="https://fuuuuuuma.github.io/gpt-live-guide-ja/present.html">プレゼントキットのページ</a> から受け取れます。</p>
+      <p style="font-size:14px;color:var(--ink);">AI商談エンジン＋Zoom/Meet連携サーバーコード・ChatGPT Live活用術100選・おすすめ音声入力AI5選の3点セットは <a href="./present.html">プレゼントキットのページ</a> から受け取れます。</p>
     </div>
     <div><div class="qrbox"></div><div class="qr-cap">スマホで読み取る 📱</div></div>
   </div>
@@ -340,8 +383,8 @@
         <a class="cta" href="https://www.youtube.com/@aiagent-kawaru">チャンネル登録</a>
       </div>
     </div>
-    <p class="src">出典：公式ブログ <a href="https://openai.com/ja-JP/index/introducing-gpt-live/">openai.com/ja-JP/index/introducing-gpt-live</a> ／ 公式X <a href="https://x.com/OpenAI/status/2074907025537224840">x.com/OpenAI</a><br>
-      ※ 本資料は2026年7月10日時点の情報に基づく非公式まとめ。OpenAI公式とは無関係で、仕様・料金は変わる可能性があります。全文（GitHub公開）・スライドは概要欄から。</p>
+    <p class="src">出典：公式ブログ <a href="https://openai.com/ja-JP/index/introducing-gpt-live/">openai.com/ja-JP/index/introducing-gpt-live</a> ／ 公式X <a href="https://x.com/OpenAI/status/2074907025537224840">x.com/OpenAI</a> ／ Recall.ai公式ドキュメント <a href="https://docs.recall.ai/">docs.recall.ai</a><br>
+      ※ 本資料は2026年7月11日時点の情報に基づく非公式まとめ。OpenAI公式・Recall.ai公式とは無関係で、仕様・料金は変わる可能性があります。全文（GitHub公開）・スライドは概要欄から。</p>
   </footer>
 </div>
 </body>

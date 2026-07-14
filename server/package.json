@@ -1,0 +1,17 @@
+{
+  "name": "ai-meeting-relay-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI商談エンジンをZoom/Google Meetの実会議に接続するためのRecall.aiリレーサーバー",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

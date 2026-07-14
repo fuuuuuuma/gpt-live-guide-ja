@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI商談エンジン — 声で話すだけの営業デモ</title>
+<style>
+  :root{
+    --brand:#1C3461; --brand-deep:#16284A; --accent:#5BBCD4; --accent-deep:#2C7A93;
+    --bg:#F7FAFC; --paper:#FFFFFF; --ink:#1C3461; --ink-mid:#4A6080;
+    --line:rgba(28,52,97,.12); --ok:#1E7F4F; --err:#B3402E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Sans",sans-serif;line-height:1.7;}
+  .bar{height:6px;background:linear-gradient(90deg,var(--brand),var(--accent));}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 70px;}
+  h1{font-size:26px;font-weight:900;color:var(--brand-deep);margin:18px 0 6px;}
+  .sub{color:var(--ink-mid);font-size:14px;margin-bottom:22px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-bottom:18px;box-shadow:0 2px 10px rgba(28,52,97,.05);}
+  .card h2{font-size:16px;font-weight:900;color:var(--brand-deep);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--brand-deep);font-size:13px;font-weight:900;flex:none;}
+  label{font-size:13px;font-weight:700;color:var(--ink-mid);display:block;margin:10px 0 4px;}
+  input[type=password],input[type=text],textarea{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:14.5px;color:var(--ink);background:var(--paper);font-family:inherit;}
+  textarea{resize:vertical;min-height:120px;line-height:1.6;}
+  input:focus,textarea:focus{outline:2px solid var(--accent);border-color:var(--accent);}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-mid);margin-top:8px;}
+  .chk input{width:auto;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;border:none;border-radius:999px;background:var(--brand);color:#fff;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;}
+  .btn.full{width:100%;}
+  .btn:hover{background:var(--brand-deep);}
+  .btn:disabled{background:#9DB0CC;cursor:not-allowed;}
+  .btn.stop{background:var(--err);}
+  .btn.ghost{background:var(--paper);border:1.5px solid var(--line);color:var(--brand);padding:9px 18px;font-size:13.5px;}
+  .status{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--ink-mid);margin-top:14px;min-height:24px;}
+  .dot{width:12px;height:12px;border-radius:50%;background:#C4CFDE;flex:none;}
+  .dot.on{background:var(--ok);animation:pulse 1.2s infinite;}
+  .dot.err{background:var(--err);}
+  .dot.busy{background:var(--accent-deep);animation:pulse .8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .log{max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+  .msg{border-left:4px solid var(--line);padding:8px 14px;border-radius:0 10px 10px 0;background:var(--bg);font-size:14.5px;}
+  .msg .who{font-size:11.5px;font-weight:900;color:var(--ink-mid);letter-spacing:.06em;}
+  .msg.you{border-left-color:var(--accent-deep);}
+  .msg.ai{border-left-color:var(--accent);background:#EFF7FA;}
+  .note{font-size:12.5px;color:var(--ink-mid);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:14px;}
+  .note b{color:var(--brand-deep);}
+  .empty{color:var(--ink-mid);font-size:13.5px;text-align:center;padding:16px 0;}
+  a{color:var(--accent-deep);font-weight:700;}
+  footer{text-align:center;font-size:12px;color:var(--ink-mid);margin-top:26px;}
+  pre.out{background:#16284A;color:#EAF2F8;border-radius:12px;padding:16px 18px;white-space:pre-wrap;word-break:break-word;font-size:13.5px;line-height:1.75;max-height:420px;overflow-y:auto;margin-bottom:12px;}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;}
+  .badge{display:inline-block;background:var(--accent);color:var(--ink);font-weight:900;border-radius:999px;padding:3px 14px;font-size:12px;margin-bottom:8px;}
+  .zoombox{border:1.5px solid var(--brand);border-radius:14px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<div class="wrap">
+  <h1>🤝 AI商談エンジン</h1>
+  <p class="sub">マイクに向かって話すだけで、AIが自社のノウハウをもとに商談の会話をします。商談が終わったら、その場で議事録と見積もりドラフトを自動生成します。</p>
+
+  <div class="note" id="sessionBanner" style="display:none;background:#EFF7FA;border-color:var(--accent);"></div>
+
+  <div class="card" id="keyCard">
+    <h2><span class="num">1</span>OpenAI APIキー</h2>
+    <label for="key">sk- で始まるAPIキー（<a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a> で発行）</label>
+    <input type="password" id="key" placeholder="sk-..." autocomplete="off">
+    <div class="chk"><input type="checkbox" id="saveKey"><label for="saveKey" style="margin:0;font-weight:400;">このブラウザに保存する（自分のPC/スマホのみで使ってください）</label></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">2</span>自社のノウハウ・トークスクリプト</h2>
+    <label for="knowhow">商品説明・話し方のポイントを、そのまま日本語で入力してください（AIの前提知識になります）</label>
+    <textarea id="knowhow" placeholder="例:
+弊社は中小企業向けにAIコンサルティング・AI研修サービスを提供しています。
+3ヶ月の伴走型プランが主力商品で、月額30万円〜。
+まずはお客様の業務課題をヒアリングし、AIで自動化できる範囲を一緒に整理することを大事にしています。
+押し売りはせず、対話でニーズを引き出すスタイルで商談してください。"></textarea>
+    <label for="company">会社名・商品名（任意）</label>
+    <input type="text" id="company" placeholder="例: 株式会社◯◯ / AI研修プログラム">
+  </div>
+
+  <div class="card">
+    <h2><span class="num">3</span>商談を開始</h2>
+    <button class="btn full" id="go">🎙️ 商談を開始する</button>
+    <div class="status"><span class="dot" id="dot"></span><span id="statusText">待機中 — キーとノウハウを入れて開始ボタンを押してください</span></div>
+    <div class="note"><b>ヒント:</b> 開始後はマイクに向かって普通に話しかけてください。お客様役として話しかけても、AIに営業担当として話させて練習相手にしてもらってもOKです。話し終えたら「商談を終了する」を押すと、会話ログから議事録・見積もりドラフトが自動生成されます。イヤホン推奨。</div>
+  </div>
+
+  <div class="card">
+    <h2>📝 商談ログ</h2>
+    <div class="log" id="log"><div class="empty">まだ会話がありません</div></div>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none;">
+    <h2>📄 議事録・見積もりドラフト</h2>
+    <div id="resultStatus" class="note" style="margin-top:0;">生成中です…</div>
+    <pre class="out" id="resultOut" style="display:none;"></pre>
+    <div class="btns" id="resultBtns" style="display:none;">
+      <button class="btn ghost" onclick="copyResult()">📋 コピー</button>
+      <button class="btn ghost" onclick="downloadResult()">⬇ ダウンロード（.md）</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="badge">次のステップ</span>
+    <h2 style="margin-top:2px;">Zoom / Google Meetの実会議にAIを参加させる</h2>
+    <p style="font-size:14px;color:var(--ink-mid);">このページ単体では、実際のZoom・Google Meetの会議室にAIを参加させることはできません。実会議への接続には、Recall.aiのMeeting Bot APIとサーバーが必要です。実際に動くサーバーコードとセットアップ手順を配布しています。</p>
+    <div class="zoombox">
+      <span style="font-weight:900;color:var(--brand-deep);">🖥️ サーバーコード配布中</span>
+      <a class="btn ghost" href="./present.html">プレゼントキットで受け取る →</a>
+    </div>
+  </div>
+
+  <footer>ChatGPT Live（GPT-Live）で作るAI営業パイプライン ｜ OpenAI Realtime API（WebRTC）＋ Responses API 使用 ｜ 本サイトは非公式ツールです</footer>
+</div>
+
+<audio id="spk" autoplay playsinline></audio>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  let pc = null, dc = null, mic = null, running = false;
+  let curAiEl = null, curAiText = '';
+  let transcript = []; // {role:'you'|'ai', text}
+
+  // 会議連携モード: Recall.aiのボットがこのページを「顔」として読み込むとき
+  // ?session=<セッションID>&server=<サーバーのURL>[&auto=1] を付けて開く
+  const qs = new URLSearchParams(location.search);
+  const sessionId = qs.get('session');
+  const serverBase = qs.get('server');
+  const sessionMode = !!(sessionId && serverBase);
+
+  try{
+    const saved = localStorage.getItem('oai_key');
+    if(saved){ $('key').value = saved; $('saveKey').checked = true; }
+    const kh = localStorage.getItem('oai_knowhow'); if(kh) $('knowhow').value = kh;
+    const co = localStorage.getItem('oai_company'); if(co) $('company').value = co;
+  }catch(e){}
+
+  if(sessionMode){
+    $('keyCard').style.display = 'none';
+    const banner = $('sessionBanner');
+    banner.style.display = 'block';
+    banner.innerHTML = '<b>🤖 会議連携モード</b>: サーバー（' + serverBase.replace(/^https?:\/\//,'') + '）が発行する短命トークンで接続します。セッションID: ' + sessionId;
+    fetch(serverBase.replace(/\/$/,'') + '/api/session/' + encodeURIComponent(sessionId))
+      .then(r => r.ok ? r.json() : Promise.reject(new Error('セッション情報を取得できませんでした')))
+      .then(info => {
+        if(info.knowhow) $('knowhow').value = info.knowhow;
+        if(info.company) $('company').value = info.company;
+        if(qs.get('auto') === '1') start();
+      })
+      .catch(e => { banner.innerHTML += '<br>⚠️ ' + e.message; });
+  }
+
+  async function getEphemeralToken(){
+    const res = await fetch(serverBase.replace(/\/$/,'') + '/api/realtime-token?session=' + encodeURIComponent(sessionId));
+    if(!res.ok) throw new Error('サーバーからトークンを取得できませんでした（HTTP ' + res.status + '）');
+    const data = await res.json();
+    if(!data.value) throw new Error('トークンの形式が不正です');
+    return data.value;
+  }
+
+  function setStatus(text, state){
+    $('statusText').textContent = text;
+    $('dot').className = 'dot' + (state ? ' ' + state : '');
+  }
+
+  function addMsg(who, text, cls){
+    const log = $('log');
+    const empty = log.querySelector('.empty');
+    if(empty) empty.remove();
+    const div = document.createElement('div');
+    div.className = 'msg ' + cls;
+    div.innerHTML = '<div class="who"></div><div class="body"></div>';
+    div.querySelector('.who').textContent = who;
+    div.querySelector('.body').textContent = text;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+    return div;
+  }
+
+  function buildInstructions(){
+    const company = $('company').value.trim();
+    const knowhow = $('knowhow').value.trim();
+    let base = 'あなたは' + (company ? '「' + company + '」' : 'この会社') +
+      'の商談を担当する、経験豊富で信頼できる営業担当者です。以下の自社ノウハウ・商品情報をもとに、お客様からの質問に的確に答え、自然な会話で商談を進めてください。' +
+      '一方的に売り込まず、相手の状況や課題をヒアリングしながら、対話で提案してください。話す速度・間の取り方は人間の商談担当者と同じように自然にしてください。';
+    if(knowhow) base += '\n\n---自社ノウハウ・トークスクリプト---\n' + knowhow;
+    return base;
+  }
+
+  function sessionUpdate(){
+    const instructions = buildInstructions();
+    const ga = { type:'session.update', session:{ type:'realtime', instructions:instructions,
+      audio:{ input:{ transcription:{ model:'gpt-4o-mini-transcribe' }, turn_detection:{ type:'semantic_vad' } },
+              output:{ voice:'marin' } } } };
+    try{ dc.send(JSON.stringify(ga)); }catch(e){}
+    const legacy = { type:'session.update', session:{ instructions:instructions, voice:'marin',
+      input_audio_transcription:{ model:'whisper-1' }, turn_detection:{ type:'server_vad' } } };
+    setTimeout(() => { try{ if(dc && dc.readyState === 'open') dc.send(JSON.stringify(legacy)); }catch(e){} }, 400);
+  }
+
+  function handleEvent(ev){
+    let d; try{ d = JSON.parse(ev.data); }catch(e){ return; }
+    const t = d.type || '';
+    if(t === 'conversation.item.input_audio_transcription.completed' ||
+       t === 'conversation.item.input_audio_transcription.done'){
+      if(d.transcript && d.transcript.trim()){
+        addMsg('🎙️ お客様（あなた）', d.transcript.trim(), 'you');
+        transcript.push({role:'お客様', text:d.transcript.trim()});
+      }
+      return;
+    }
+    if(t === 'response.output_audio_transcript.delta' || t === 'response.audio_transcript.delta'){
+      if(!curAiEl){ curAiEl = addMsg('🤝 AI営業担当', '', 'ai'); curAiText = ''; }
+      curAiText += (d.delta || '');
+      curAiEl.querySelector('.body').textContent = curAiText;
+      $('log').scrollTop = $('log').scrollHeight;
+      return;
+    }
+    if(t === 'response.done'){
+      if(curAiText.trim()) transcript.push({role:'AI営業担当', text:curAiText.trim()});
+      curAiEl = null; curAiText = '';
+      return;
+    }
+    if(t === 'error'){
+      const msg = (d.error && d.error.message) || '';
+      if(/unknown|invalid|parameter|param/i.test(msg) && /session/i.test(msg)) return;
+      setStatus('エラー: ' + msg, 'err');
+    }
+  }
+
+  async function start(){
+    let key = '';
+    if(sessionMode){
+      setStatus('サーバーからトークンを取得中…', 'busy');
+      try{ key = await getEphemeralToken(); }
+      catch(e){ setStatus(e.message, 'err'); return; }
+    } else {
+      key = $('key').value.trim();
+      if(!key){ setStatus('APIキーを入力してください', 'err'); return; }
+      if(!/^sk-/.test(key)){ setStatus('キーは sk- で始まる文字列です', 'err'); return; }
+      try{
+        if($('saveKey').checked){
+          localStorage.setItem('oai_key', key);
+          localStorage.setItem('oai_knowhow', $('knowhow').value);
+          localStorage.setItem('oai_company', $('company').value);
+        } else { localStorage.removeItem('oai_key'); }
+      }catch(e){}
+    }
+
+    $('go').disabled = true;
+    $('resultCard').style.display = 'none';
+    transcript = [];
+    setStatus('マイクに接続中…', 'busy');
+    try{
+      mic = await navigator.mediaDevices.getUserMedia({ audio:true });
+    }catch(e){
+      setStatus('マイクを使用できません。ブラウザのマイク許可を確認してください', 'err');
+      $('go').disabled = false; return;
+    }
+
+    setStatus('OpenAIに接続中…', 'busy');
+    try{
+      pc = new RTCPeerConnection();
+      pc.ontrack = e => { $('spk').srcObject = e.streams[0]; };
+      mic.getTracks().forEach(tr => pc.addTrack(tr, mic));
+      dc = pc.createDataChannel('oai-events');
+      dc.onmessage = handleEvent;
+      dc.onopen = () => { sessionUpdate(); setStatus('商談中 — 話しかけてください', 'on'); };
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      const model = 'gpt-realtime';
+
+      let res = await fetch('https://api.openai.com/v1/realtime/calls?model=' + encodeURIComponent(model), {
+        method:'POST', headers:{ 'Authorization':'Bearer ' + key, 'Content-Type':'application/sdp' }, body: offer.sdp });
+      if(res.status === 404 || res.status === 405){
+        res = await fetch('https://api.openai.com/v1/realtime?model=' + encodeURIComponent(model), {
+          method:'POST', headers:{ 'Authorization':'Bearer ' + key, 'Content-Type':'application/sdp', 'OpenAI-Beta':'realtime=v1' }, body: offer.sdp });
+      }
+      if(!res.ok){
+        const body = await res.text();
+        let hint = 'HTTP ' + res.status;
+        if(res.status === 401) hint = 'APIキーが無効です（401）。キーを確認してください';
+        else if(res.status === 429) hint = 'レート制限または残高不足です（429）。OpenAIの課金設定を確認してください';
+        else if(body) hint += ' ' + body.slice(0, 140);
+        throw new Error(hint);
+      }
+      const answer = await res.text();
+      await pc.setRemoteDescription({ type:'answer', sdp: answer });
+
+      running = true;
+      $('go').disabled = false;
+      $('go').textContent = '⏹ 商談を終了する';
+      $('go').classList.add('stop');
+    }catch(e){
+      setStatus('接続できませんでした — ' + e.message, 'err');
+      stop(true);
+    }
+  }
+
+  function stopConnection(){
+    try{ if(dc) dc.close(); }catch(e){}
+    try{ if(pc) pc.close(); }catch(e){}
+    try{ if(mic) mic.getTracks().forEach(tr => tr.stop()); }catch(e){}
+    pc = dc = mic = null;
+    $('go').disabled = false;
+    $('go').textContent = '🎙️ 商談を開始する';
+    $('go').classList.remove('stop');
+  }
+
+  async function stop(silent){
+    const wasRunning = running;
+    running = false;
+    stopConnection();
+    if(!silent) setStatus('商談を終了しました', '');
+    if(!silent && wasRunning && transcript.length) await generateMinutes();
+  }
+
+  async function generateMinutes(){
+    $('resultCard').style.display = 'block';
+    $('resultOut').style.display = 'none';
+    $('resultBtns').style.display = 'none';
+    $('resultStatus').style.display = 'block';
+    $('resultStatus').textContent = '会話ログから議事録・見積もりドラフトを生成しています…';
+    try{
+      let text;
+      if(sessionMode){
+        // 会議連携モード: サーバーが保存したRecall.aiの文字起こし（参加者ごとの発言）から生成する
+        const res = await fetch(serverBase.replace(/\/$/,'') + '/api/generate-minutes', {
+          method:'POST', headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ sessionId })
+        });
+        if(!res.ok) throw new Error('サーバーでの生成に失敗しました（HTTP ' + res.status + '）');
+        const data = await res.json();
+        text = data.minutes;
+      } else {
+        const key = $('key').value.trim();
+        const log = transcript.map(t => t.role + ': ' + t.text).join('\n');
+        const instructions = 'あなたは商談の記録係です。渡される会話ログ（お客様とAI営業担当のやり取り）をもとに、日本語のMarkdownで次の2つを出力してください。' +
+          '\n1. 「## 議事録」— 商談日は「本商談」、参加者は「AI営業担当」「お客様」、話し合った内容の要約（箇条書き）、決定事項、次のアクションを整理する。' +
+          '\n2. 「## 見積もりドラフト」— 商談で言及された内容をもとに、項目と想定金額を表形式で示す。金額に関する情報が会話に無ければ「要ヒアリング」と書く。末尾に必ず「※この見積もりはAIによる自動生成のドラフトです。金額・内容は必ず人間が確認してください」という一文を入れる。' +
+          '\n会話ログに具体的な内容が乏しい場合は、分かる範囲で簡潔にまとめてください。';
+        const res = await fetch('https://api.openai.com/v1/responses', {
+          method:'POST',
+          headers:{ 'Authorization':'Bearer ' + key, 'Content-Type':'application/json' },
+          body: JSON.stringify({ model:'gpt-5.5', instructions: instructions, input: log })
+        });
+        if(!res.ok){
+          const body = await res.text();
+          throw new Error('HTTP ' + res.status + ' ' + body.slice(0,140));
+        }
+        const data = await res.json();
+        text = data.output_text;
+        if(!text && Array.isArray(data.output)){
+          const msg = data.output.find(it => it.type === 'message');
+          const oc = msg && Array.isArray(msg.content) && msg.content.find(c => c.type === 'output_text');
+          text = oc && oc.text;
+        }
+      }
+      if(!text) throw new Error('生成結果を読み取れませんでした');
+      $('resultStatus').style.display = 'none';
+      $('resultOut').textContent = text;
+      $('resultOut').style.display = 'block';
+      $('resultBtns').style.display = 'flex';
+    }catch(e){
+      $('resultStatus').textContent = '生成に失敗しました — ' + e.message + '（商談ログは上に残っています）';
+    }
+  }
+
+  window.copyResult = async function(){
+    const text = $('resultOut').textContent;
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); }
+      else{ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    }catch(e){}
+  };
+  window.downloadResult = function(){
+    const text = $('resultOut').textContent;
+    const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = '商談議事録_見積もりドラフト.md';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  };
+
+  $('go').addEventListener('click', () => { running ? stop() : start(); });
+  window.addEventListener('beforeunload', () => stopConnection());
+})();
+</script>
+</body>
+</html>
